@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfigurator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-image: url('c48b0d90c4fbd55faffd54ae534af0a6.jpg'); /* Ersetzen Sie 'Ihr-Hintergrundbild-URL' durch die tatsächliche URL Ihres Bildes */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        .config-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 80%;
+        }
+        .config-box {
+            position: relative;
+            background-color: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(25% - 40px); /* vier Kästchen pro Zeile */
+            box-sizing: border-box;
+        }
+        .config-box h2 {
+            margin-top: 0;
+        }
+        .config-box label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .config-box input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .config-box button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .config-box button:hover {
+            background-color: #0056b3;
+        }
+        .add-box, .remove-box {
+            cursor: pointer;
+            font-size: 1.5em;
+            position: absolute;
+            top: 10px;
+        }
+        .add-box {
+            right: 40px;
+        }
+        .remove-box {
+            right: 10px;
+        }
+        .result {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .view-results {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .view-results:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<button class="view-results" onclick="viewResults()">Ergebnisse anzeigen</button>
+<div class="main-container">
+    <div class="config-container">
+        <div class="config-box" id="box-1">
+            <span class="add-box" onclick="addBox()">&#43;</span>
+            <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
+            <h2>Artikel</h2>
+            <label for="artikelname-1">Artikelname</label>
+            <input type="text" id="artikelname-1" name="artikelname">
+
+            <label for="artikelgroessen-1">Artikelvarianten (Größen/Längen)</label>
+            <input type="text" id="artikelgroessen-1" name="artikelgroessen">
+
+            <label for="vollzeitMitarbeiter-1">Vollzeitmitarbeiter</label>
+            <input type="number" id="vollzeitMitarbeiter-1" name="vollzeitMitarbeiter">
+
+            <label for="teilzeitMitarbeiter-1">Teilzeitmitarbeiter</label>
+            <input type="number" id="teilzeitMitarbeiter-1" name="teilzeitMitarbeiter">
+
+            <label for="tauschquote-1">Tauschquote pro Woche</label>
+            <input type="number" step="0.01" id="tauschquote-1" name="tauschquote">
+
+            <label for="lieferrhythmus-1">Lieferrhythmus</label>
+            <input type="text" id="lieferrhythmus-1" name="lieferrhythmus" value="3">
+
+            <button type="button" onclick="calculate('box-1')">Berechnen</button>
+            <div class="result" id="result-1"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let boxCounter = 1;
+    let results = [];
+
+    function calculate(boxId) {
+        const box = document.getElementById(boxId);
+        const artikelname = box.querySelector('input[name="artikelname"]').value;
+        const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
+        const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value);
+        const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value);
+        const tauschquote = parseFloat(box.querySelector('input[name="tauschquote"]').value);
+        const lieferrhythmus = box.querySelector('input[name="lieferrhythmus"]').value;
+
+        const teilzeitMitarbeiter1Ergebnis = teilzeitMitarbeiter * 0.5;
+        const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiter1Ergebnis;
+        const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
+        const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
+        const ausstattungsmenge = teileProMitarbeiter * 3;
+
+        console.log('Artikelname:', artikelname);
+        console.log('Artikelvarianten (Größen/Längen):', artikelgroessen);
+        console.log('Vollzeitmitarbeiter:', vollzeitMitarbeiter);
+        console.log('Teilzeitmitarbeiter:', teilzeitMitarbeiter);
+        console.log('Tauschquote pro Woche:', tauschquote);
+        console.log('Lieferrhythmus:', lieferrhythmus);
+        console.log('Teilzeit Mitarbeiter Ergebnis:', teilzeitMitarbeiter1Ergebnis);
+        console.log('Mitarbeiter Anzahl:', mitarbeiterAnzahl);
+        console.log('Mitarbeiter Anzahl Gerundet:', mitarbeiterAnzahlGerundet);
+        console.log('Tauschmenge pro Woche:', teileProMitarbeiter);
+        console.log('Ausstattungsmenge:', ausstattungsmenge);
+
+        const result = {
+            artikelname,
+            artikelgroessen,
+            vollzeitMitarbeiter,
+            teilzeitMitarbeiter,
+            tauschquote,
+            lieferrhythmus,
+            teileProMitarbeiter,
+            ausstattungsmenge
+        };
+
+        results.push(result);
+
+        box.querySelector('.result').innerHTML = `
+            <strong>Ergebnisse:</strong><br>
+            Tauschmenge pro Woche: ${teileProMitarbeiter}<br>
+            Ausstattungsmenge: ${ausstattungsmenge}
+        `;
+    }
+
+    function addBox() {
+        boxCounter++;
+        const container = document.querySelector('.config-container');
+        const newBox = document.createElement('div');
+        newBox.className = 'config-box';
+        newBox.id = `box-${boxCounter}`;
+        newBox.innerHTML = `
+            <span class="add-box" onclick="addBox()">&#43;</span>
+            <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
+            <h2>Artikel</h2>
+            <label for="artikelname-${boxCounter}">Artikelname</label>
+            <input type="text" id="artikelname-${boxCounter}" name="artikelname">
+
+            <label for="artikelgroessen-${boxCounter}">Artikelvarianten(Größen/Längen)</label>
+            <input type="text" id="artikelgroessen-${boxCounter}" name="artikelgroessen">
+
+            <label for="vollzeitMitarbeiter-${boxCounter}">Vollzeitmitarbeiter</label>
+            <input type="number" id="vollzeitMitarbeiter-${boxCounter}" name="vollzeitMitarbeiter">
+
+            <label for="teilzeitMitarbeiter-${boxCounter}">Teilzeitmitarbeiter</label>
+            <input type="number" id="teilzeitMitarbeiter-${boxCounter}" name="teilzeitMitarbeiter">
+
+            <label for="tauschquote-${boxCounter}">Tauschquote pro Woche</label>
+            <input type="number" step="0.01" id="tauschquote-${boxCounter}" name="tauschquote">
+
+            <label for="lieferrhythmus-${boxCounter}">Lieferrhythmus</label>
+            <input type="text" id="lieferrhythmus-${boxCounter}" name="lieferrhythmus" value="3">
+
+            <button type="button" onclick="calculate('box-${boxCounter}')">Berechnen</button>
+            <div class="result" id="result-${boxCounter}"></div>
+        `;
+        container.appendChild(newBox);
+        updateRemoveButtons();
+    }
+
+    function removeBox(element) {
+        const box = element.parentElement;
+        box.remove();
+        updateRemoveButtons();
+    }
+
+    function updateRemoveButtons() {
+        const removeButtons = document.querySelectorAll('.remove-box');
+        if (removeButtons.length === 1) {
+            removeButtons[0].style.display = 'none';
+        } else {
+            removeButtons.forEach(button => button.style.display = 'inline');
+        }
+    }
+
+    function viewResults() {
+        localStorage.setItem('results', JSON.stringify(results));
+        window.location.href = 'results.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', updateRemoveButtons);
+</script>
+</body>
+</html>

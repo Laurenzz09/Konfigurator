@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ergebnisse</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        .download-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .download-button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</head>
+<body>
+<h1>Ergebnisse</h1>
+<table id="results-table">
+    <thead>
+    <tr>
+        <th>Artikelname</th>
+        <th>Artikelvarianten (Größen/Längen)</th>
+        <th>Vollzeitmitarbeiter</th>
+        <th>Teilzeitmitarbeiter</th>
+        <th>Tauschquote pro Woche</th>
+        <th>Lieferrhythmus</th>
+        <th>Tauschmenge pro Woche</th>
+        <th>Ausstattungsmenge</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<button class="download-button" onclick="downloadExcel()">Tabelle als Excel herunterladen</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const results = JSON.parse(localStorage.getItem('results'));
+        const resultsTableBody = document.querySelector('#results-table tbody');
+
+        results.forEach(result => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${result.artikelname}</td>
+                <td>${result.artikelgroessen}</td>
+                <td>${result.vollzeitMitarbeiter}</td>
+                <td>${result.teilzeitMitarbeiter}</td>
+                <td>${result.tauschquote}</td>
+                <td>${result.lieferrhythmus}</td>
+                <td>${result.teileProMitarbeiter}</td>
+                <td>${result.ausstattungsmenge}</td>
+            `;
+            resultsTableBody.appendChild(row);
+        });
+    });
+
+    function downloadExcel() {
+        const wb = XLSX.utils.table_to_book(document.getElementById('results-table'), {sheet: "Ergebnisse"});
+        XLSX.writeFile(wb, 'Ergebnisse.xlsx');
+    }
+</script>
+</body>
+</html>
