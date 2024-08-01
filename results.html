@@ -27,17 +27,28 @@
             background-color: #007BFF;
             color: white;
         }
-        .download-button {
+        .button-container {
             margin-top: 20px;
+        }
+        .download-button, .back-button {
             padding: 10px 20px;
-            background-color: #28a745;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-right: 10px;
+        }
+        .download-button {
+            background-color: #28a745;
         }
         .download-button:hover {
             background-color: #218838;
+        }
+        .back-button {
+            background-color: #007BFF;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
@@ -60,11 +71,14 @@
     <tbody>
     </tbody>
 </table>
-<button class="download-button" onclick="downloadExcel()">Tabelle als Excel herunterladen</button>
+<div class="button-container">
+    <button class="download-button" onclick="downloadExcel()">Tabelle als Excel herunterladen</button>
+    <button class="back-button" onclick="goBack()">Zurück zum Konfigurator</button>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const results = JSON.parse(localStorage.getItem('results'));
+        const results = JSON.parse(sessionStorage.getItem('results'));
         const resultsTableBody = document.querySelector('#results-table tbody');
 
         results.forEach(result => {
@@ -86,6 +100,10 @@
     function downloadExcel() {
         const wb = XLSX.utils.table_to_book(document.getElementById('results-table'), {sheet: "Ergebnisse"});
         XLSX.writeFile(wb, 'Ergebnisse.xlsx');
+    }
+
+    function goBack() {
+        window.location.href = 'konfigurator.html'; // Die URL der Konfigurator-Seite
     }
 </script>
 </body>
