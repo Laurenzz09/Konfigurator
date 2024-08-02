@@ -59,7 +59,8 @@
     <thead>
     <tr>
         <th>Artikelname</th>
-        <th>Artikelvarianten (Größen/Längen)</th>
+        <th>Artikel Längen</th>
+        <th>Artikel Größen</th>
         <th>Vollzeitmitarbeiter</th>
         <th>Teilzeitmitarbeiter</th>
         <th>Tauschquote pro Woche</th>
@@ -85,6 +86,7 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${result.artikelname}</td>
+                <td>${result.artikellaengen}</td>
                 <td>${result.artikelgroessen}</td>
                 <td>${result.vollzeitMitarbeiter}</td>
                 <td>${result.teilzeitMitarbeiter}</td>

@@ -138,7 +138,10 @@
             <label for="artikelname-${boxCounter}" data-translate-key="artikelname">Artikelname</label>
             <input type="text" id="artikelname-${boxCounter}" name="artikelname" value="${config.artikelname || ''}">
 
-            <label for="artikelgroessen-${boxCounter}" data-translate-key="artikelvarianten">Artikelvarianten (Größen/Längen)</label>
+            <label for="artikellaengen-${boxCounter}" data-translate-key="artikellaengen">Artikel Längen</label>
+            <input type="text" id="artikellaengen-${boxCounter}" name="artikellaengen" value="${config.artikellaengen || ''}">
+
+            <label for="artikelgroessen-${boxCounter}" data-translate-key="artikelgroessen">Artikel Größen</label>
             <input type="text" id="artikelgroessen-${boxCounter}" name="artikelgroessen" value="${config.artikelgroessen || ''}">
 
             <label for="vollzeitMitarbeiter-${boxCounter}" data-translate-key="vollzeitMitarbeiter">Vollzeitmitarbeiter</label>
@@ -184,6 +187,7 @@
         const boxes = document.querySelectorAll('.config-box');
         boxes.forEach(box => {
             const artikelname = box.querySelector('input[name="artikelname"]').value;
+            const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
             const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
             const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
             const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
@@ -198,6 +202,7 @@
 
             const result = {
                 artikelname,
+                artikellaengen,
                 artikelgroessen,
                 vollzeitMitarbeiter,
                 teilzeitMitarbeiter,
@@ -216,6 +221,7 @@
     function calculate(boxId) {
         const box = document.getElementById(boxId);
         const artikelname = box.querySelector('input[name="artikelname"]').value;
+        const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
         const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
         const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
         const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
@@ -229,7 +235,8 @@
         const ausstattungsmenge = teileProMitarbeiter * 3;
 
         console.log('Artikelname:', artikelname);
-        console.log('Artikelvarianten (Größen/Längen):', artikelgroessen);
+        console.log('Artikel Längen:', artikellaengen);
+        console.log('Artikel Größen:', artikelgroessen);
         console.log('Vollzeitmitarbeiter:', vollzeitMitarbeiter);
         console.log('Teilzeitmitarbeiter:', teilzeitMitarbeiter);
         console.log('Tauschquote pro Woche:', tauschquote);
@@ -251,7 +258,8 @@
     de: {
         artikel: "Artikel",
         artikelname: "Artikelname",
-        artikelvarianten: "Artikelvarianten (Größen/Längen)",
+        artikellaengen: "Artikel Längen",
+        artikelgroessen: "Artikel Größen",
         vollzeitMitarbeiter: "Vollzeitmitarbeiter",
         teilzeitMitarbeiter: "Teilzeitmitarbeiter",
         tauschquote: "Tauschquote pro Woche",
@@ -262,7 +270,8 @@
     en: {
         artikel: "Article",
         artikelname: "Article name",
-        artikelvarianten: "Article variants (sizes/lengths)",
+        artikellaengen: "Article lengths",
+        artikelgroessen: "Article sizes",
         vollzeitMitarbeiter: "Full-time employee",
         teilzeitMitarbeiter: "Part-time employee",
         tauschquote: "Exchange rate per week",
