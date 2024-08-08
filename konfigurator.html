@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konfigurator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             background-image: url('texxeo_SmartGate Classic_Home_Header.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
             min-height: 100vh;
+            color: #fff;
+            padding: 20px;
         }
         .main-container {
             display: flex;
@@ -20,55 +23,74 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
         }
         .language-selector {
             position: absolute;
             top: 20px;
             right: 20px;
+            display: flex;
+            align-items: center;
         }
         .language-selector select {
             padding: 5px;
             border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            margin-left: 10px;
         }
         .config-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            width: 80%;
+            width: 100%;
         }
         .config-box {
             position: relative;
-            background-color: white;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
             padding: 20px;
             margin: 10px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: calc(25% - 40px);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: calc(33% - 40px);
             box-sizing: border-box;
+            transition: box-shadow 0.3s, background 0.3s;
+        }
+        .config-box:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.3);
         }
         .config-box h2 {
             margin-top: 0;
         }
         .config-box label {
             display: block;
-            margin: 10px 0 5px;
+            margin: 15px 0 5px;
+            font-size: 1.1em;
         }
         .config-box input {
             width: calc(100% - 22px);
             padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            border: none;
             border-radius: 5px;
+            background: rgba(255, 255, 255, 0.4);
+            color: #000;
+            font-size: 1em;
         }
         .config-box button {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             background-color: #007BFF;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1.1em;
         }
         .config-box button:hover {
             background-color: #0056b3;
@@ -78,6 +100,7 @@
             font-size: 1.5em;
             position: absolute;
             top: 10px;
+            color: #fff;
         }
         .add-box {
             right: 40px;
@@ -86,9 +109,12 @@
             right: 10px;
         }
         .result {
-            margin-top: 10px;
-            font-size: 1.2em;
-            color: #333;
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
         }
         .view-results {
             position: fixed;
@@ -101,9 +127,23 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 1000;
+            transition: background-color 0.3s;
         }
         .view-results:hover {
             background-color: #218838;
+        }
+        select, button, input {
+            outline: none;
+        }
+        @media (max-width: 768px) {
+            .config-box {
+                width: calc(50% - 40px);
+            }
+        }
+        @media (max-width: 480px) {
+            .config-box {
+                width: calc(100% - 40px);
+            }
         }
     </style>
 </head>
@@ -125,192 +165,176 @@
 <script>
     let boxCounter = 1;
 
-   let currentLanguage = 'de'; // Standardmäßig Deutsch
+    let currentLanguage = 'de'; // Standardmäßig Deutsch
 
-   function createBox(config = {}) {
-       boxCounter++;
-       const container = document.getElementById('config-container');
-       const newBox = document.createElement('div');
-       newBox.className = 'config-box';
-       newBox.id = `box-${boxCounter}`;
-       newBox.innerHTML = `
-           <span class="add-box" onclick="addBox()">&#43;</span>
-           <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
-           <h2 data-translate-key="artikel">${translations[currentLanguage].artikel}</h2>
-           <label for="artikelname-${boxCounter}" data-translate-key="artikelname">${translations[currentLanguage].artikelname}</label>
-           <input type="text" id="artikelname-${boxCounter}" name="artikelname" value="${config.artikelname || ''}">
+    function createBox(config = {}) {
+        boxCounter++;
+        const container = document.getElementById('config-container');
+        const newBox = document.createElement('div');
+        newBox.className = 'config-box';
+        newBox.id = `box-${boxCounter}`;
+        newBox.innerHTML = `
+            <span class="add-box" onclick="addBox()">&#43;</span>
+            <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
+            <h2 data-translate-key="artikel">${translations[currentLanguage].artikel}</h2>
+            <label for="artikelname-${boxCounter}" data-translate-key="artikelname">${translations[currentLanguage].artikelname}</label>
+            <input type="text" id="artikelname-${boxCounter}" name="artikelname" value="${config.artikelname || ''}">
 
-           <label for="artikellaengen-${boxCounter}" data-translate-key="artikellaengen">${translations[currentLanguage].artikellaengen}</label>
-           <input type="text" id="artikellaengen-${boxCounter}" name="artikellaengen" value="${config.artikellaengen || ''}">
+            <label for="artikellaengen-${boxCounter}" data-translate-key="artikellaengen">${translations[currentLanguage].artikellaengen}</label>
+            <input type="text" id="artikellaengen-${boxCounter}" name="artikellaengen" value="${config.artikellaengen || ''}">
 
-           <label for="artikelgroessen-${boxCounter}" data-translate-key="artikelgroessen">${translations[currentLanguage].artikelgroessen}</label>
-           <input type="text" id="artikelgroessen-${boxCounter}" name="artikelgroessen" value="${config.artikelgroessen || ''}">
+            <label for="artikelgroessen-${boxCounter}" data-translate-key="artikelgroessen">${translations[currentLanguage].artikelgroessen}</label>
+            <input type="text" id="artikelgroessen-${boxCounter}" name="artikelgroessen" value="${config.artikelgroessen || ''}">
 
-           <label for="vollzeitMitarbeiter-${boxCounter}" data-translate-key="vollzeitMitarbeiter">${translations[currentLanguage].vollzeitMitarbeiter}</label>
-           <input type="number" id="vollzeitMitarbeiter-${boxCounter}" name="vollzeitMitarbeiter" value="${config.vollzeitMitarbeiter || ''}">
+            <label for="vollzeitMitarbeiter-${boxCounter}" data-translate-key="vollzeitMitarbeiter">${translations[currentLanguage].vollzeitMitarbeiter}</label>
+            <input type="number" id="vollzeitMitarbeiter-${boxCounter}" name="vollzeitMitarbeiter" value="${config.vollzeitMitarbeiter || ''}">
 
-           <label for="teilzeitMitarbeiter-${boxCounter}" data-translate-key="teilzeitMitarbeiter">${translations[currentLanguage].teilzeitMitarbeiter}</label>
-           <input type="number" id="teilzeitMitarbeiter-${boxCounter}" name="teilzeitMitarbeiter" value="${config.teilzeitMitarbeiter || ''}">
+            <label for="teilzeitMitarbeiter-${boxCounter}" data-translate-key="teilzeitMitarbeiter">${translations[currentLanguage].teilzeitMitarbeiter}</label>
+            <input type="number" id="teilzeitMitarbeiter-${boxCounter}" name="teilzeitMitarbeiter" value="${config.teilzeitMitarbeiter || ''}">
 
-           <label for="tauschquote-${boxCounter}" data-translate-key="tauschquote">${translations[currentLanguage].tauschquote}</label>
-           <input type="number" step="0.01" id="tauschquote-${boxCounter}" name="tauschquote" value="${config.tauschquote || ''}">
+            <label for="tauschquote-${boxCounter}" data-translate-key="tauschquote">${translations[currentLanguage].tauschquote}</label>
+            <input type="number" step="0.01" id="tauschquote-${boxCounter}" name="tauschquote" value="${config.tauschquote || ''}">
 
-           <label for="lieferrhythmus-${boxCounter}" data-translate-key="lieferrhythmus">${translations[currentLanguage].lieferrhythmus}</label>
-           <input type="text" id="lieferrhythmus-${boxCounter}" name="lieferrhythmus" value="${config.lieferrhythmus || '3'}">
+            <label for="lieferrhythmus-${boxCounter}" data-translate-key="lieferrhythmus">${translations[currentLanguage].lieferrhythmus}</label>
+            <input type="text" id="lieferrhythmus-${boxCounter}" name="lieferrhythmus" value="${config.lieferrhythmus || '3'}">
 
-           <button type="button" onclick="calculate('box-${boxCounter}')" data-translate-key="berechnen">${translations[currentLanguage].berechnen}</button>
-           <div class="result" id="result-${boxCounter}"></div>
-       `;
-       container.appendChild(newBox);
-       updateRemoveButtons();
-   }
+            <button type="button" onclick="calculate('box-${boxCounter}')" data-translate-key="berechnen">${translations[currentLanguage].berechnen}</button>
+            <div class="result" id="result-${boxCounter}"></div>
+        `;
+        container.appendChild(newBox);
+        updateRemoveButtons();
+    }
 
-   function addBox() {
-       createBox();
-   }
+    function addBox() {
+        createBox();
+    }
 
-   function removeBox(element) {
-       const box = element.parentElement;
-       box.remove();
-       updateRemoveButtons();
-   }
+    function removeBox(element) {
+        const box = element.parentElement;
+        box.remove();
+        updateRemoveButtons();
+    }
 
-   function updateRemoveButtons() {
-       const removeButtons = document.querySelectorAll('.remove-box');
-       if (removeButtons.length === 1) {
-           removeButtons[0].style.display = 'none';
-       } else {
-           removeButtons.forEach(button => button.style.display = 'inline');
-       }
-   }
+    function updateRemoveButtons() {
+        const removeButtons = document.querySelectorAll('.remove-box');
+        if (removeButtons.length === 1) {
+            removeButtons[0].style.display = 'none';
+        } else {
+            removeButtons.forEach(button => button.style.display = 'inline');
+        }
+    }
 
-   function viewResults() {
-       results = [];
-       const boxes = document.querySelectorAll('.config-box');
-       boxes.forEach(box => {
-           const artikelname = box.querySelector('input[name="artikelname"]').value;
-           const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
-           const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
-           const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
-           const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
-           const tauschquote = parseFloat(box.querySelector('input[name="tauschquote"]').value) || 0;
-           const lieferrhythmus = box.querySelector('input[name="lieferrhythmus"]').value;
+    function viewResults() {
+        results = [];
+        const boxes = document.querySelectorAll('.config-box');
+        boxes.forEach(box => {
+            const artikelname = box.querySelector('input[name="artikelname"]').value;
+            const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
+            const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
+            const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
+            const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
+            const tauschquote = parseFloat(box.querySelector('input[name="tauschquote"]').value) || 0;
+            const lieferrhythmus = box.querySelector('input[name="lieferrhythmus"]').value;
 
-           const teilzeitMitarbeiter1Ergebnis = teilzeitMitarbeiter * 0.5;
-           const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiter1Ergebnis;
-           const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
-           const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
-           const ausstattungsmenge = teileProMitarbeiter * 3;
+            const teilzeitMitarbeiter1Ergebnis = teilzeitMitarbeiter * 0.5;
+            const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiter1Ergebnis;
+            const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
+            const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
+            const ausstattungsmenge = teileProMitarbeiter * 3;
 
-           const result = {
-               artikelname,
-               artikellaengen,
-               artikelgroessen,
-               vollzeitMitarbeiter,
-               teilzeitMitarbeiter,
-               tauschquote,
-               lieferrhythmus,
-               teileProMitarbeiter,
-               ausstattungsmenge
-           };
+            const result = {
+                artikelname,
+                artikellaengen,
+                artikelgroessen,
+                vollzeitMitarbeiter,
+                teilzeitMitarbeiter,
+                tauschquote,
+                lieferrhythmus,
+                teileProMitarbeiter,
+                ausstattungsmenge
+            };
 
-           results.push(result);
-       });
-       sessionStorage.setItem('results', JSON.stringify(results));
-       window.location.href = 'results.html';
-   }
+            results.push(result);
+        });
+        sessionStorage.setItem('results', JSON.stringify(results));
+        window.location.href = 'results.html';
+    }
 
-   function calculate(boxId) {
-       const box = document.getElementById(boxId);
-       const artikelname = box.querySelector('input[name="artikelname"]').value;
-       const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
-       const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
-       const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
-       const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
-       const tauschquote = parseFloat(box.querySelector('input[name="tauschquote"]').value) || 0;
-       const lieferrhythmus = box.querySelector('input[name="lieferrhythmus"]').value;
+    function calculate(boxId) {
+        const box = document.getElementById(boxId);
+        const artikelname = box.querySelector('input[name="artikelname"]').value;
+        const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
+        const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
+        const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
+        const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
+        const tauschquote = parseFloat(box.querySelector('input[name="tauschquote"]').value) || 0;
+        const lieferrhythmus = box.querySelector('input[name="lieferrhythmus"]').value;
 
-       const teilzeitMitarbeiter1Ergebnis = teilzeitMitarbeiter * 0.5;
-       const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiter1Ergebnis;
-       const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
-       const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
-       const ausstattungsmenge = teileProMitarbeiter * 3;
+        const teilzeitMitarbeiter1Ergebnis = teilzeitMitarbeiter * 0.5;
+        const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiter1Ergebnis;
+        const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
+        const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
+        const ausstattungsmenge = teileProMitarbeiter * 3;
 
-       console.log('Artikelname:', artikelname);
-       console.log('Artikel Längen:', artikellaengen);
-       console.log('Artikel Größen:', artikelgroessen);
-       console.log('Vollzeitmitarbeiter:', vollzeitMitarbeiter);
-       console.log('Teilzeitmitarbeiter:', teilzeitMitarbeiter);
-       console.log('Tauschquote pro Woche:', tauschquote);
-       console.log('Lieferrhythmus:', lieferrhythmus);
-       console.log('Teilzeit Mitarbeiter Ergebnis:', teilzeitMitarbeiter1Ergebnis);
-       console.log('Mitarbeiter Anzahl:', mitarbeiterAnzahl);
-       console.log('Mitarbeiter Anzahl Gerundet:', mitarbeiterAnzahlGerundet);
-       console.log('Tauschmenge pro Woche:', teileProMitarbeiter);
-       console.log('Ausstattungsmenge:', ausstattungsmenge);
+        box.querySelector('.result').innerHTML = `
+            <strong>Ergebnisse:</strong><br>
+            Tauschmenge pro Woche: ${teileProMitarbeiter}<br>
+            Ausstattungsmenge: ${ausstattungsmenge}
+        `;
+    }
 
-       box.querySelector('.result').innerHTML = `
-           <strong>Ergebnisse:</strong><br>
-           Tauschmenge pro Woche: ${teileProMitarbeiter}<br>
-           Ausstattungsmenge: ${ausstattungsmenge}
-       `;
-   }
+    const translations = {
+        de: {
+            artikel: "Artikel",
+            artikelname: "Artikelname",
+            artikellaengen: "Artikel Längen",
+            artikelgroessen: "Artikel Größen",
+            vollzeitMitarbeiter: "Vollzeitmitarbeiter",
+            teilzeitMitarbeiter: "Teilzeitmitarbeiter",
+            tauschquote: "Tauschquote pro Woche",
+            lieferrhythmus: "Lieferrhythmus",
+            berechnen: "Berechnen",
+            ergebnisseAnzeigen: "Ergebnisse anzeigen"
+        },
+        en: {
+            artikel: "Article",
+            artikelname: "Article name",
+            artikellaengen: "Article lengths",
+            artikelgroessen: "Article sizes",
+            vollzeitMitarbeiter: "Full-time employee",
+            teilzeitMitarbeiter: "Part-time employee",
+            tauschquote: "Exchange rate per week",
+            lieferrhythmus: "Delivery frequency",
+            berechnen: "Calculate",
+            ergebnisseAnzeigen: "Show Results"
+        }
+    };
 
-   const translations = {
-       de: {
-           artikel: "Artikel",
-           artikelname: "Artikelname",
-           artikellaengen: "Artikel Längen",
-           artikelgroessen: "Artikel Größen",
-           vollzeitMitarbeiter: "Vollzeitmitarbeiter",
-           teilzeitMitarbeiter: "Teilzeitmitarbeiter",
-           tauschquote: "Tauschquote pro Woche",
-           lieferrhythmus: "Lieferrhythmus",
-           berechnen: "Berechnen",
-           ergebnisseAnzeigen: "Ergebnisse anzeigen"
-       },
-       en: {
-           artikel: "Article",
-           artikelname: "Article name",
-           artikellaengen: "Article lengths",
-           artikelgroessen: "Article sizes",
-           vollzeitMitarbeiter: "Full-time employee",
-           teilzeitMitarbeiter: "Part-time employee",
-           tauschquote: "Exchange rate per week",
-           lieferrhythmus: "Delivery frequency",
-           berechnen: "Calculate",
-           ergebnisseAnzeigen: "Show Results"
-       }
-   };
+    function changeLanguage() {
+        const select = document.getElementById('language-select');
+        const selectedOption = select.options[select.selectedIndex];
+        currentLanguage = selectedOption.value;
+        const flagImage = selectedOption.getAttribute('data-image');
 
-   function changeLanguage() {
-       const select = document.getElementById('language-select');
-       const selectedOption = select.options[select.selectedIndex];
-       currentLanguage = selectedOption.value;
-       const flagImage = selectedOption.getAttribute('data-image');
+        document.getElementById('language-flag').src = flagImage;
 
-       // Ändern des Flaggenbildes
-       document.getElementById('language-flag').src = flagImage;
+        const elements = document.querySelectorAll('[data-translate-key]');
+        elements.forEach(element => {
+            const key = element.getAttribute('data-translate-key');
+            element.innerText = translations[currentLanguage][key];
+        });
 
-       // Texte entsprechend der ausgewählten Sprache ändern
-       const elements = document.querySelectorAll('[data-translate-key]');
-       elements.forEach(element => {
-           const key = element.getAttribute('data-translate-key');
-           element.innerText = translations[currentLanguage][key];
-       });
+        document.title = translations[currentLanguage].artikel;
+    }
 
-       // Anpassung weiterer Elemente
-       document.title = translations[currentLanguage].artikel;
-   }
-
-   document.addEventListener('DOMContentLoaded', () => {
-       const savedResults = JSON.parse(sessionStorage.getItem('results'));
-       if (savedResults && savedResults.length > 0) {
-           savedResults.forEach(config => createBox(config));
-       } else {
-           createBox(); // Falls keine gespeicherten Daten vorhanden sind, eine leere Box erstellen
-       }
-   });
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedResults = JSON.parse(sessionStorage.getItem('results'));
+        if (savedResults && savedResults.length > 0) {
+            savedResults.forEach(config => createBox(config));
+        } else {
+            createBox();
+        }
+    });
 
 </script>
 </body>
