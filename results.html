@@ -9,18 +9,22 @@
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             background-color: #1e1e1e;
             color: #ffffff;
         }
         h1 {
             text-align: center;
             color: #007BFF;
+            margin: 10px 0;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 10px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             overflow: hidden;
@@ -30,7 +34,7 @@
             border: 1px solid #444;
         }
         th, td {
-            padding: 12px;
+            padding: 8px;
             text-align: left;
         }
         th {
@@ -41,13 +45,16 @@
         tr:nth-child(even) {
             background-color: rgba(255, 255, 255, 0.05);
         }
+        tr:hover {
+            background-color: rgba(0, 123, 255, 0.2);
+        }
         .button-container {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 10px;
         }
         .download-button, .back-button {
-            padding: 10px 20px;
+            padding: 8px 16px;
             color: white;
             border: none;
             border-radius: 5px;
@@ -67,45 +74,62 @@
         .back-button:hover {
             background-color: #0056b3;
         }
+        .chart-container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .chart-container canvas {
+            max-width: 200px;
+            margin: 5px;
+        }
         @media (max-width: 768px) {
             th, td {
-                padding: 10px;
+                padding: 6px;
             }
             .download-button, .back-button {
-                padding: 8px 16px;
+                padding: 6px 12px;
             }
         }
         @media (max-width: 480px) {
             th, td {
-                padding: 8px;
+                padding: 4px;
             }
             .download-button, .back-button {
-                padding: 6px 12px;
+                padding: 4px 8px;
                 font-size: 0.9em;
             }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <h1>Ergebnisse</h1>
-<table id="results-table">
-    <thead>
-    <tr>
-        <th>Artikelname</th>
-        <th>Artikel Längen</th>
-        <th>Artikel Größen</th>
-        <th>Vollzeitmitarbeiter</th>
-        <th>Teilzeitmitarbeiter</th>
-        <th>Tauschquote pro Woche</th>
-        <th>Lieferrhythmus</th>
-        <th>Tauschmenge pro Woche</th>
-        <th>Ausstattungsmenge</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+<div class="table-container">
+    <table id="results-table">
+        <thead>
+        <tr>
+            <th>Artikelname</th>
+            <th>Artikel Längen</th>
+            <th>Artikel Größen</th>
+            <th>Vollzeitmitarbeiter</th>
+            <th>Teilzeitmitarbeiter</th>
+            <th>Tauschquote pro Woche</th>
+            <th>Lieferrhythmus</th>
+            <th>Tauschmenge pro Woche</th>
+            <th>Ausstattungsmenge</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div class="chart-container">
+    <canvas id="fullTimePieChart"></canvas>
+    <canvas id="partTimePieChart"></canvas>
+</div>
 <div class="button-container">
     <button class="download-button" onclick="downloadExcel()">Tabelle als Excel herunterladen</button>
     <button class="back-button" onclick="goBack()">Zurück zum Konfigurator</button>
@@ -115,8 +139,15 @@
     document.addEventListener('DOMContentLoaded', () => {
         const results = JSON.parse(sessionStorage.getItem('results'));
         const resultsTableBody = document.querySelector('#results-table tbody');
+        const artikelnameList = [];
+        const vollzeitMitarbeiterList = [];
+        const teilzeitMitarbeiterList = [];
 
         results.forEach(result => {
+            artikelnameList.push(result.artikelname);
+            vollzeitMitarbeiterList.push(result.vollzeitMitarbeiter);
+            teilzeitMitarbeiterList.push(result.teilzeitMitarbeiter);
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${result.artikelname}</td>
@@ -130,6 +161,54 @@
                 <td>${result.ausstattungsmenge}</td>
             `;
             resultsTableBody.appendChild(row);
+        });
+
+        // Erstellen des Pie-Charts für Vollzeitmitarbeiter
+        const ctx1 = document.getElementById('fullTimePieChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: artikelnameList,
+                datasets: [{
+                    label: 'Vollzeitmitarbeiter',
+                    data: vollzeitMitarbeiterList,
+                    backgroundColor: artikelnameList.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`),
+                    borderColor: artikelnameList.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+
+        // Erstellen des Pie-Charts für Teilzeitmitarbeiter
+        const ctx2 = document.getElementById('partTimePieChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: artikelnameList,
+                datasets: [{
+                    label: 'Teilzeitmitarbeiter',
+                    data: teilzeitMitarbeiterList,
+                    backgroundColor: artikelnameList.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`),
+                    borderColor: artikelnameList.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
         });
     });
 
