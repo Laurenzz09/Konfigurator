@@ -132,6 +132,23 @@
         .view-results:hover {
             background-color: #218838;
         }
+        .backButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .backButton:hover {
+            background-color: #cc7000;
+        }
         select, button, input {
             outline: none;
         }
@@ -148,6 +165,10 @@
     </style>
 </head>
 <body>
+
+<!-- Zurück zur Startseite Button -->
+<a href="index.html" class="backButton" id="backButton">Zurück zur Startseite</a>
+
 <div class="language-selector">
     <img id="language-flag" src="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png" alt="Language Flag" style="width:30px; vertical-align: middle; margin-right: 5px;">
     <select id="language-select" onchange="changeLanguage()">
@@ -155,6 +176,7 @@
         <option value="en" data-image="https://www.countryflags.com/wp-content/uploads/united-kingdom-flag-png-large.png">English</option>
     </select>
 </div>
+
 <button class="view-results" onclick="viewResults()" data-translate-key="ergebnisseAnzeigen">Ergebnisse anzeigen</button>
 <div class="main-container">
     <div class="config-container" id="config-container">
@@ -294,7 +316,8 @@
             tauschquote: "Tauschquote pro Woche",
             lieferrhythmus: "Lieferrhythmus",
             berechnen: "Berechnen",
-            ergebnisseAnzeigen: "Ergebnisse anzeigen"
+            ergebnisseAnzeigen: "Ergebnisse anzeigen",
+            backButton: "Zurück zur Startseite"
         },
         en: {
             artikel: "Article",
@@ -306,7 +329,8 @@
             tauschquote: "Exchange rate per week",
             lieferrhythmus: "Delivery frequency",
             berechnen: "Calculate",
-            ergebnisseAnzeigen: "Show Results"
+            ergebnisseAnzeigen: "Show Results",
+            backButton: "Back to homepage"
         }
     };
 
@@ -325,6 +349,7 @@
         });
 
         document.title = translations[currentLanguage].artikel;
+        document.getElementById('backButton').innerText = translations[currentLanguage].backButton;
     }
 
     document.addEventListener('DOMContentLoaded', () => {

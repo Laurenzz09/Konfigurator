@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tauschmenge berechnen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        background-image: url('texxeo_SmartGate Classic_Home_Header.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: #fff;
+        padding: 20px;
+    }
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+    }
+    .language-selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+    }
+    .language-selector select {
+        padding: 5px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: #fff;
+        margin-left: 10px;
+    }
+    .config-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+    .config-box {
+        position: relative;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        width: calc(33% - 40px);
+        box-sizing: border-box;
+        transition: box-shadow 0.3s, background 0.3s;
+    }
+    .config-box:hover {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        background: rgba(255, 255, 255, 0.3);
+    }
+    .config-box h2 {
+        margin-top: 0;
+    }
+    .config-box label {
+        display: block;
+        margin: 15px 0 5px;
+        font-size: 1.1em;
+    }
+    .config-box input {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.4);
+        color: #000;
+        font-size: 1em;
+    }
+    .config-box button {
+        width: 100%;
+        padding: 15px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 1.1em;
+    }
+    .config-box button:hover {
+        background-color: #0056b3;
+    }
+    .result {
+        margin-top: 20px;
+        font-size: 1.3em;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .view-results {
+        position: fixed;
+        right: 20px;
+        top: 60px;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1000;
+        transition: background-color 0.3s;
+    }
+    .view-results:hover {
+        background-color: #218838;
+    }
+    .backButton {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: orange;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+    .backButton:hover {
+        background-color: #cc7000;
+    }
+    .add-box, .remove-box {
+        cursor: pointer;
+        font-size: 1.5em;
+        position: absolute;
+        top: 10px;
+        color: #fff;
+    }
+    .add-box {
+        right: 40px;
+    }
+    .remove-box {
+        right: 10px;
+    }
+    select, button, input {
+        outline: none;
+    }
+    @media (max-width: 768px) {
+        .config-box {
+            width: calc(50% - 40px);
+        }
+    }
+    @media (max-width: 480px) {
+        .config-box {
+            width: calc(100% - 40px);
+        }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Zurück zur Startseite Button -->
+<a href="index.html" class="backButton" id="backButton">Zurück zur Startseite</a>
+
+<div class="language-selector">
+  <img id="language-flag" src="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png" alt="Language Flag" style="width:30px; vertical-align: middle; margin-right: 5px;">
+  <select id="language-select" onchange="changeLanguage()">
+    <option value="de" data-image="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png">Deutsch</option>
+    <option value="en" data-image="https://www.countryflags.com/wp-content/uploads/united-kingdom-flag-png-large.png">English</option>
+  </select>
+</div>
+
+<button class="view-results" onclick="viewResults()">Ergebnisse anzeigen</button>
+
+<div class="main-container">
+  <div class="config-container" id="config-container">
+    <div class="config-box" id="config-box-1">
+      <span class="add-box" onclick="addBox()">&#43;</span>
+      <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
+      <h2>Artikel 1</h2>
+      <label for="artikelname-1">Artikelname:</label>
+      <input type="text" id="artikelname-1" name="artikelname">
+
+      <label for="vollzeitMitarbeiter-1">Anzahl der Vollzeitmitarbeiter (100%):</label>
+      <input type="number" id="vollzeitMitarbeiter-1" name="vollzeitMitarbeiter">
+
+      <label for="teilzeitMitarbeiter-1">Anzahl der Teilzeitmitarbeiter (50%):</label>
+      <input type="number" id="teilzeitMitarbeiter-1" name="teilzeitMitarbeiter">
+
+      <label for="wäscheWechsel-1">Anzahl der Wäsche-Wechsel pro Mitarbeiter:</label>
+      <input type="number" id="wäscheWechsel-1" name="wäscheWechsel">
+
+      <button type="button" onclick="calculate('config-box-1')">Berechnen</button>
+      <div class="result" id="result-1"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let boxCounter = 1;
+
+  function addBox() {
+      boxCounter++;
+      const container = document.getElementById('config-container');
+      const newBox = document.createElement('div');
+      newBox.classList.add('config-box');
+      newBox.id = `config-box-${boxCounter}`;
+      newBox.innerHTML = `
+          <span class="add-box" onclick="addBox()">&#43;</span>
+          <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
+          <h2>Artikel ${boxCounter}</h2>
+          <label for="artikelname-${boxCounter}">Artikelname:</label>
+          <input type="text" id="artikelname-${boxCounter}" name="artikelname">
+
+          <label for="vollzeitMitarbeiter-${boxCounter}">Anzahl der Vollzeitmitarbeiter (100%):</label>
+          <input type="number" id="vollzeitMitarbeiter-${boxCounter}" name="vollzeitMitarbeiter">
+
+          <label for="teilzeitMitarbeiter-${boxCounter}">Anzahl der Teilzeitmitarbeiter (50%):</label>
+          <input type="number" id="teilzeitMitarbeiter-${boxCounter}" name="teilzeitMitarbeiter">
+
+          <label for="wäscheWechsel-${boxCounter}">Anzahl der Wäsche-Wechsel pro Mitarbeiter:</label>
+          <input type="number" id="wäscheWechsel-${boxCounter}" name="wäscheWechsel">
+
+          <button type="button" onclick="calculate('config-box-${boxCounter}')">Berechnen</button>
+          <div class="result" id="result-${boxCounter}"></div>
+      `;
+      container.appendChild(newBox);
+  }
+
+  function removeBox(element) {
+      const box = element.parentElement;
+      box.remove();
+  }
+
+  function calculate(boxId) {
+      const box = document.getElementById(boxId);
+      const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
+      const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
+      const wäscheWechsel = parseFloat(box.querySelector('input[name="wäscheWechsel"]').value) || 0;
+
+      const teilzeitMitarbeiterErgebnis = teilzeitMitarbeiter * 0.5;
+      const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiterErgebnis;
+      const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
+      const teileProMitarbeiter = mitarbeiterAnzahlGerundet * wäscheWechsel;
+
+      const resultDiv = box.querySelector('.result');
+      resultDiv.innerHTML = `
+          <strong>Ergebnisse:</strong><br>
+          Tauschmenge pro Woche: ${teileProMitarbeiter}
+      `;
+  }
+
+  function viewResults() {
+      const results = [];
+      for (let i = 1; i <= boxCounter; i++) {
+          const box = document.getElementById(`config-box-${i}`);
+          if (box) {
+              const artikelname = box.querySelector(`input[name="artikelname"]`).value;
+              const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
+              const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
+              const wäscheWechsel = parseFloat(box.querySelector('input[name="wäscheWechsel"]').value) || 0;
+
+              const teilzeitMitarbeiterErgebnis = teilzeitMitarbeiter * 0.5;
+              const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiterErgebnis;
+              const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
+              const teileProMitarbeiter = mitarbeiterAnzahlGerundet * wäscheWechsel;
+
+              results.push({
+                  artikelname,
+                  vollzeitMitarbeiter,
+                  teilzeitMitarbeiter,
+                  wäscheWechsel,
+                  teileProMitarbeiter
+              });
+          }
+      }
+      console.log(results); // Ergebnisse können hier verarbeitet oder gespeichert werden
+  }
+</script>
+
+</body>
+</html>
