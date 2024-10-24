@@ -192,6 +192,28 @@
         .modal .row input {
             width: 48%;
         }
+
+.tableButton {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background-color: #4CAF50; /* Grün passend zu den anderen Elementen */
+    color: white;
+    border: none;
+    border-radius: 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+}
+
+.tableButton:hover {
+    background-color: #45a049; /* Dunklerer Grünton beim Hover */
+}
+
+
     </style>
 </head>
 <body>
@@ -218,7 +240,10 @@
             <span class="plus-icon">+</span>
         </div>
     </div>
+    <!-- Button zur Tabelle -->
+    <a href="resultsTabelle.html" class="tableButton" id="resultsButton">Zur Tabelle</a>
 </div>
+
 
 <!-- Modal für Artikel hinzufügen -->
 <div class="modal" id="modal">
@@ -352,6 +377,64 @@
             closeModal();
         }
     }
+
+    function saveItem() {
+    const artikelname = document.getElementById('artikelname').value;
+    const artikellaengen = document.getElementById('artikellaengen').value;
+    const artikelgroessen = document.getElementById('artikelgroessen').value;
+    const vollzeitMitarbeiter = document.getElementById('vollzeitMitarbeiter').value;
+    const tauschquote = document.getElementById('tauschquote').value;
+    const lieferrhythmus = document.getElementById('lieferrhythmus').value;
+
+    let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+
+    const itemData = {
+        artikelname,
+        artikellaengen,
+        artikelgroessen,
+        vollzeitMitarbeiter,
+        tauschquote,
+        lieferrhythmus
+    };
+
+    if (editingItemId === 'new') {
+        items.push(itemData);
+    } else {
+        const index = items.findIndex(item => item.id === editingItemId);
+        items[index] = itemData;
+    }
+
+    localStorage.setItem('artikelItems', JSON.stringify(items));
+
+    // Zum Inventar hinzufügen
+    if (editingItemId === 'new') {
+        const inventoryContainer = document.getElementById('inventory-container');
+        const newItem = document.createElement('div');
+        newItem.className = 'inventory-item';
+        newItem.dataset.artikelname = artikelname;
+        newItem.dataset.artikellaengen = artikellaengen;
+        newItem.dataset.artikelgroessen = artikelgroessen;
+        newItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
+        newItem.dataset.tauschquote = tauschquote;
+        newItem.dataset.lieferrhythmus = lieferrhythmus;
+        newItem.id = `item-${Date.now()}`;
+        newItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
+        newItem.onclick = () => openModal(newItem.id);
+        inventoryContainer.appendChild(newItem);
+    } else {
+        const item = document.getElementById(editingItemId);
+        item.dataset.artikelname = artikelname;
+        item.dataset.artikellaengen = artikellaengen;
+        item.dataset.artikelgroessen = artikelgroessen;
+        item.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
+        item.dataset.tauschquote = tauschquote;
+        item.dataset.lieferrhythmus = lieferrhythmus;
+        item.innerHTML = `<span class="item-label">${artikelname}</span>`;
+    }
+
+    closeModal();
+}
+
 </script>
 </body>
 </html>
