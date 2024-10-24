@@ -241,9 +241,6 @@
     <label for="vollzeitMitarbeiter">Vollzeitmitarbeiter</label>
     <input type="number" id="vollzeitMitarbeiter">
 
-    <!--<label for="teilzeitMitarbeiter">Teilzeitmitarbeiter</label>
-    <input type="number" id="teilzeitMitarbeiter"> -->
-
     <label for="tauschquote">Tauschquote pro Woche</label>
     <input type="number" step="0.01" id="tauschquote">
 
@@ -297,7 +294,6 @@
             document.getElementById('artikellaengen').value = itemData.artikellaengen || '';
             document.getElementById('artikelgroessen').value = itemData.artikelgroessen || '';
             document.getElementById('vollzeitMitarbeiter').value = itemData.vollzeitMitarbeiter || '';
-            document.getElementById('teilzeitMitarbeiter').value = itemData.teilzeitMitarbeiter || '';
             document.getElementById('tauschquote').value = itemData.tauschquote || '';
             document.getElementById('lieferrhythmus').value = itemData.lieferrhythmus || '3';
         }
@@ -318,7 +314,6 @@
         const artikellaengen = document.getElementById('artikellaengen').value;
         const artikelgroessen = document.getElementById('artikelgroessen').value;
         const vollzeitMitarbeiter = document.getElementById('vollzeitMitarbeiter').value;
-        const teilzeitMitarbeiter = document.getElementById('teilzeitMitarbeiter').value;
         const tauschquote = document.getElementById('tauschquote').value;
         const lieferrhythmus = document.getElementById('lieferrhythmus').value;
 
@@ -330,7 +325,6 @@
             newItem.dataset.artikellaengen = artikellaengen;
             newItem.dataset.artikelgroessen = artikelgroessen;
             newItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-            newItem.dataset.teilzeitMitarbeiter = teilzeitMitarbeiter;
             newItem.dataset.tauschquote = tauschquote;
             newItem.dataset.lieferrhythmus = lieferrhythmus;
             newItem.id = `item-${Date.now()}`;
@@ -343,7 +337,6 @@
             item.dataset.artikellaengen = artikellaengen;
             item.dataset.artikelgroessen = artikelgroessen;
             item.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-            item.dataset.teilzeitMitarbeiter = teilzeitMitarbeiter;
             item.dataset.tauschquote = tauschquote;
             item.dataset.lieferrhythmus = lieferrhythmus;
             item.innerHTML = `<span class="item-label">${artikelname}</span>`;
