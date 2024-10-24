@@ -391,7 +391,7 @@
     const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
     const ausstattungsmenge = teileProMitarbeiter * 3;
 
-    let items = JSON.parse(sessionStorage.getItem('artikelItems')) || [];
+    let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
 
     const itemData = {
         artikelname,
@@ -411,7 +411,7 @@
         items[index] = itemData;
     }
 
-    sessionStorage.setItem('artikelItems', JSON.stringify(items));
+    localStorage.setItem('artikelItems', JSON.stringify(items));
 
     // Zum Inventar hinzufügen
     if (editingItemId === 'new') {
