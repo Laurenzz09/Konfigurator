@@ -386,7 +386,12 @@
     const tauschquote = document.getElementById('tauschquote').value;
     const lieferrhythmus = document.getElementById('lieferrhythmus').value;
 
-    let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+    // Berechnungen
+    const mitarbeiterAnzahlGerundet = Math.ceil(vollzeitMitarbeiter);
+    const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
+    const ausstattungsmenge = teileProMitarbeiter * 3;
+
+    let items = JSON.parse(sessionStorage.getItem('artikelItems')) || [];
 
     const itemData = {
         artikelname,
@@ -394,7 +399,9 @@
         artikelgroessen,
         vollzeitMitarbeiter,
         tauschquote,
-        lieferrhythmus
+        lieferrhythmus,
+        ausstattungsmenge,  // Berechnetes Ergebnis
+        teileProMitarbeiter // Berechnetes Ergebnis für Tauschmenge pro Woche
     };
 
     if (editingItemId === 'new') {
@@ -404,7 +411,7 @@
         items[index] = itemData;
     }
 
-    localStorage.setItem('artikelItems', JSON.stringify(items));
+    sessionStorage.setItem('artikelItems', JSON.stringify(items));
 
     // Zum Inventar hinzufügen
     if (editingItemId === 'new') {

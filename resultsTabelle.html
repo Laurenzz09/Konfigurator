@@ -58,6 +58,8 @@
         <th>Vollzeitmitarbeiter</th>
         <th>Tauschquote</th>
         <th>Lieferrhythmus</th>
+        <th>Ausstattungsmenge</th> <!-- Neue Spalte -->
+        <th>Tauschmenge pro Woche</th> <!-- Neue Spalte -->
     </tr>
     </thead>
     <tbody>
@@ -65,7 +67,7 @@
     </tbody>
 </table>
 
-<a href="konfiguratorNew.html" class="backButton">Zurück</a>
+<a href="index.html" class="backButton">Zurück zur Startseite</a>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -81,6 +83,8 @@
                 <td>${item.vollzeitMitarbeiter}</td>
                 <td>${item.tauschquote}</td>
                 <td>${item.lieferrhythmus}</td>
+                <td>${item.ausstattungsmenge}</td> <!-- Ausstattungsmenge anzeigen -->
+                <td>${item.teileProMitarbeiter}</td> <!-- Tauschmenge pro Woche anzeigen -->
             `;
             tableBody.appendChild(row);
         });
