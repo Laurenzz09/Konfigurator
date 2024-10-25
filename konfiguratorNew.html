@@ -6,6 +6,7 @@
     <title>Konfigurator New</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -30,18 +31,40 @@
             z-index: 2; /* Über alles außer die modale Box */
         }
 
+        /* Abdunklung des Hintergrundbildes */
+        .background-darken {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Passt die Transparenz an, um das Bild zu verdunkeln */
+            z-index: 1; /* Bleibt hinter allen anderen Elementen */
+            pointer-events: none; /* Verhindert Interaktion mit der Overlay-Schicht */
+        }
+
+
         /* Transparenten Hintergrund um die Boxen mit Rand auf dem Bildschirm */
+        /* Hintergrund um die Boxen mit Abstand zum Rand */
         .background-container {
             background: rgba(255, 255, 255, 0.1);
             padding: 40px;
-            margin: 20px;
+            margin: 20px auto; /* Zentriert das Element horizontal */
             border-radius: 20px;
             width: calc(100% - 80px);
             max-width: 1200px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             position: relative;
             z-index: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Zentriert den Inhalt horizontal */
+            justify-content: center; /* Zentriert den Inhalt vertikal */
+            min-height: 80vh; /* Mindesgröße für vertikale Zentrierung */
         }
+
+
 
         .main-container {
             display: flex;
@@ -133,12 +156,13 @@
             top: 50%;
             transform: translate(-50%, -50%);
             width: 400px;
-            padding: 20px;
+            padding: 20px 30px; /* Vertikales und horizontales Padding */
             background-color: rgba(255, 255, 255, 0.2); /* Transparenter Hintergrund für die modale Box */
             color: #fff; /* Weiße Schrift */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
 
         .modal label {
             display: block;
@@ -177,13 +201,20 @@
         .modal .delete-button {
             background-color: #ff4d4d;
             color: #fff;
+            margin-left: 108px;
         }
+
 
         /* Zeilenweise Anordnung */
         .modal .row {
             display: flex;
-            justify-content: space-between;
+            gap: 20px; /* Abstand zwischen den Eingabefeldern */
         }
+
+        .modal .row div {
+            flex: 1; /* Sorgt dafür, dass die beiden Felder gleichmäßig verteilt sind */
+        }
+
 
         .modal .row label {
             width: 48%;
@@ -218,6 +249,10 @@
 </head>
 <body>
 
+<div class="background-darken"></div>
+<!-- Restlicher Inhalt -->
+
+
 <!-- Abdunklung des Hintergrunds, wenn eine Box geöffnet ist -->
 <div class="background-overlay" id="background-overlay"></div>
 
@@ -242,6 +277,8 @@
     </div>
     <!-- Button zur Tabelle -->
     <a href="resultsTabelle.html" class="tableButton" id="resultsButton">Zur Tabelle</a>
+    <button onclick="clearStorage()" class="tableButton">Von vorne anfangen</button>
+
 </div>
 
 
@@ -441,6 +478,38 @@
 
     closeModal();
 }
+    document.addEventListener('DOMContentLoaded', () => {
+    loadItems();
+});
+
+function loadItems() {
+    const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+    const inventoryContainer = document.getElementById('inventory-container');
+
+    items.forEach((item, index) => {
+        const newItem = document.createElement('div');
+        newItem.className = 'inventory-item';
+        newItem.dataset.artikelname = item.artikelname;
+        newItem.dataset.artikellaengen = item.artikellaengen;
+        newItem.dataset.artikelgroessen = item.artikelgroessen;
+        newItem.dataset.vollzeitMitarbeiter = item.vollzeitMitarbeiter;
+        newItem.dataset.tauschquote = item.tauschquote;
+        newItem.dataset.lieferrhythmus = item.lieferrhythmus;
+        newItem.id = `item-${index}`;
+        newItem.innerHTML = `<span class="item-label">${item.artikelname}</span>`;
+        newItem.onclick = () => openModal(newItem.id);
+        inventoryContainer.appendChild(newItem);
+    });
+}
+
+function clearStorage() {
+    localStorage.removeItem('artikelItems');
+    const inventoryContainer = document.getElementById('inventory-container');
+    inventoryContainer.innerHTML = `<div class="inventory-item" onclick="openModal('new')">
+                                        <span class="plus-icon">+</span>
+                                    </div>`;
+}
+
 
 </script>
 </body>

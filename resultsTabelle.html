@@ -5,43 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ergebnisse der Artikel</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #333;
+            color: #f4f4f4;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th, td {
-            padding: 10px;
+            padding: 15px;
             text-align: left;
         }
 
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #555;
+            color: #f4f4f4;
+            font-weight: 500;
         }
 
-        .backButton {
+        td {
+            border-bottom: 1px solid #555;
+        }
+
+        tr:hover {
+            background-color: #666;
+            transition: background-color 0.3s ease;
+        }
+
+        .backButton, .downloadButton {
             padding: 10px 20px;
-            background-color: orange;
+            background-color: #ff9800;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .backButton:hover, .downloadButton:hover {
+            background-color: #e68900;
         }
     </style>
 </head>
@@ -58,8 +77,8 @@
         <th>Vollzeitmitarbeiter</th>
         <th>Tauschquote</th>
         <th>Lieferrhythmus</th>
-        <th>Ausstattungsmenge</th> <!-- Neue Spalte -->
-        <th>Tauschmenge pro Woche</th> <!-- Neue Spalte -->
+        <th>Ausstattungsmenge</th>
+        <th>Tauschmenge pro Woche</th>
     </tr>
     </thead>
     <tbody>
@@ -67,7 +86,10 @@
     </tbody>
 </table>
 
-<a href="konfiguratorNew.html" class="backButton">Zurück</a>
+<div>
+    <a href="konfiguratorNew.html" class="backButton">Zurück</a>
+    <button class="downloadButton" onclick="downloadExcel()">Tabelle als Excel herunterladen</button>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -83,12 +105,18 @@
                 <td>${item.vollzeitMitarbeiter}</td>
                 <td>${item.tauschquote}</td>
                 <td>${item.lieferrhythmus}</td>
-                <td>${item.ausstattungsmenge}</td> <!-- Ausstattungsmenge anzeigen -->
-                <td>${item.teileProMitarbeiter}</td> <!-- Tauschmenge pro Woche anzeigen -->
+                <td>${item.ausstattungsmenge}</td>
+                <td>${item.teileProMitarbeiter}</td>
             `;
             tableBody.appendChild(row);
         });
     });
+
+    function downloadExcel() {
+        const table = document.getElementById("artikelTable");
+        const workbook = XLSX.utils.table_to_book(table, { sheet: "Ergebnisse" });
+        XLSX.writeFile(workbook, "ArtikelErgebnisse.xlsx");
+    }
 </script>
 
 </body>
