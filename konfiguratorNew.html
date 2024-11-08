@@ -199,9 +199,9 @@
         }
 
         .modal .delete-button {
-            background-color: #ff4d4d;
+            background-color: #b22222;
             color: #fff;
-            margin-left: 108px;
+            margin-left: 16px;
         }
 
 
@@ -303,11 +303,15 @@
     <label for="vollzeitMitarbeiter">Vollzeitmitarbeiter</label>
     <input type="number" id="vollzeitMitarbeiter">
 
-    <label for="tauschquote">Tauschquote pro Woche</label>
-    <input type="number" step="0.01" id="tauschquote">
+   <!-- <label for="tauschquote">Tauschquote pro Woche</label>
+    <input type="number" id="tauschquote" value="2" readonly> -->
 
     <label for="lieferrhythmus">Lieferrhythmus</label>
-    <input type="text" id="lieferrhythmus" value="3">
+    <select id="lieferrhythmus">
+        <option value="1">1 pro Woche</option>
+        <option value="3">3 pro Woche</option>
+        <option value="5">5 pro Woche</option>
+    </select>
 
     <button class="save-button" onclick="saveItem()">Fertig</button>
     <button class="close-button" onclick="closeModal()">Schließen</button>
@@ -415,20 +419,27 @@
         }
     }
 
-    function saveItem() {
+function saveItem() {
     const artikelname = document.getElementById('artikelname').value;
     const artikellaengen = document.getElementById('artikellaengen').value;
     const artikelgroessen = document.getElementById('artikelgroessen').value;
-    const vollzeitMitarbeiter = document.getElementById('vollzeitMitarbeiter').value;
-    const tauschquote = document.getElementById('tauschquote').value;
-    const lieferrhythmus = document.getElementById('lieferrhythmus').value;
+    const vollzeitMitarbeiter = parseInt(document.getElementById('vollzeitMitarbeiter').value) || 0;
+    const tauschquote = 2; // Tauschquote fest auf 2
+    const lieferrhythmus = parseInt(document.getElementById('lieferrhythmus').value);
 
-    // Berechnungen
-    const mitarbeiterAnzahlGerundet = Math.ceil(vollzeitMitarbeiter);
-    const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
-    const ausstattungsmenge = teileProMitarbeiter * 3;
+    // Berechnung der Ausstattungsmenge basierend auf Lieferrhythmus
+    let ausstattungsmenge;
+    const teileProMitarbeiter = vollzeitMitarbeiter * tauschquote;
 
-    let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+    if (lieferrhythmus === 1) {
+        ausstattungsmenge = teileProMitarbeiter * 3;
+    } else if (lieferrhythmus === 3) {
+        ausstattungsmenge = teileProMitarbeiter * 2.5;
+    } else if (lieferrhythmus === 5) {
+        ausstattungsmenge = teileProMitarbeiter * 2;
+    } else {
+        ausstattungsmenge = 0; // Für ungültige Werte des Lieferrhythmus
+    }
 
     const itemData = {
         artikelname,
@@ -437,10 +448,10 @@
         vollzeitMitarbeiter,
         tauschquote,
         lieferrhythmus,
-        ausstattungsmenge,  // Berechnetes Ergebnis
-        teileProMitarbeiter // Berechnetes Ergebnis für Tauschmenge pro Woche
+        ausstattungsmenge  // Berechnetes Ergebnis wird gespeichert
     };
 
+    let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
     if (editingItemId === 'new') {
         items.push(itemData);
     } else {
@@ -450,7 +461,6 @@
 
     localStorage.setItem('artikelItems', JSON.stringify(items));
 
-    // Zum Inventar hinzufügen
     if (editingItemId === 'new') {
         const inventoryContainer = document.getElementById('inventory-container');
         const newItem = document.createElement('div');
@@ -461,6 +471,7 @@
         newItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
         newItem.dataset.tauschquote = tauschquote;
         newItem.dataset.lieferrhythmus = lieferrhythmus;
+        newItem.dataset.ausstattungsmenge = ausstattungsmenge;
         newItem.id = `item-${Date.now()}`;
         newItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
         newItem.onclick = () => openModal(newItem.id);
@@ -473,11 +484,13 @@
         item.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
         item.dataset.tauschquote = tauschquote;
         item.dataset.lieferrhythmus = lieferrhythmus;
+        item.dataset.ausstattungsmenge = ausstattungsmenge;
         item.innerHTML = `<span class="item-label">${artikelname}</span>`;
     }
 
     closeModal();
 }
+
     document.addEventListener('DOMContentLoaded', () => {
     loadItems();
 });

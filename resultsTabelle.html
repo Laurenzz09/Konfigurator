@@ -93,8 +93,13 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        updateTable();
+    });
+
+    function updateTable() {
         const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
         const tableBody = document.getElementById('artikelTable').querySelector('tbody');
+        tableBody.innerHTML = ''; // Bestehende Zeilen löschen, um doppelte Einträge zu vermeiden
 
         items.forEach(item => {
             const row = document.createElement('tr');
@@ -110,13 +115,14 @@
             `;
             tableBody.appendChild(row);
         });
-    });
+    }
 
     function downloadExcel() {
         const table = document.getElementById("artikelTable");
         const workbook = XLSX.utils.table_to_book(table, { sheet: "Ergebnisse" });
         XLSX.writeFile(workbook, "ArtikelErgebnisse.xlsx");
     }
+
 </script>
 
 </body>
