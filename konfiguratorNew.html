@@ -300,7 +300,7 @@
         </div>
     </div>
 
-    <label for="vollzeitMitarbeiter">Vollzeitmitarbeiter</label>
+    <label for="vollzeitMitarbeiter">Mitarbeiter</label>
     <input type="number" id="vollzeitMitarbeiter">
 
    <!-- <label for="tauschquote">Tauschquote pro Woche</label>
@@ -346,9 +346,11 @@
     });
 
     function openModal(itemId) {
-        const modal = document.getElementById('modal');
-        modal.style.display = 'block';
-        editingItemId = itemId;
+    const modal = document.getElementById('modal');
+    modal.style.display = 'block';
+    editingItemId = itemId; // Setze die ID des Artikels, der bearbeitet oder gelöscht werden soll
+
+
 
         // Abdunkeln des restlichen Hintergrunds
         const overlay = document.getElementById('background-overlay');
@@ -384,40 +386,65 @@
         const lieferrhythmus = document.getElementById('lieferrhythmus').value;
 
         if (editingItemId === 'new') {
-            const inventoryContainer = document.getElementById('inventory-container');
-            const newItem = document.createElement('div');
-            newItem.className = 'inventory-item';
-            newItem.dataset.artikelname = artikelname;
-            newItem.dataset.artikellaengen = artikellaengen;
-            newItem.dataset.artikelgroessen = artikelgroessen;
-            newItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-            newItem.dataset.tauschquote = tauschquote;
-            newItem.dataset.lieferrhythmus = lieferrhythmus;
-            newItem.id = `item-${Date.now()}`;
-            newItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
-            newItem.onclick = () => openModal(newItem.id);
-            inventoryContainer.appendChild(newItem);
-        } else {
-            const item = document.getElementById(editingItemId);
-            item.dataset.artikelname = artikelname;
-            item.dataset.artikellaengen = artikellaengen;
-            item.dataset.artikelgroessen = artikelgroessen;
-            item.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-            item.dataset.tauschquote = tauschquote;
-            item.dataset.lieferrhythmus = lieferrhythmus;
-            item.innerHTML = `<span class="item-label">${artikelname}</span>`;
-        }
+    // Neuen Artikel zum DOM hinzufügen
+    const newItem = document.createElement('div');
+    newItem.className = 'inventory-item';
+    newItem.id = newItemId;
+    newItem.dataset.artikelname = artikelname;
+    newItem.dataset.artikellaengen = artikellaengen;
+    newItem.dataset.artikelgroessen = artikelgroessen;
+    newItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
+    newItem.dataset.tauschquote = tauschquote;
+    newItem.dataset.lieferrhythmus = lieferrhythmus;
+    newItem.dataset.ausstattungsmenge = ausstattungsmenge;
+    newItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
+    newItem.onclick = () => openModal(newItem.id); // Modal beim Klick öffnen
+    inventoryContainer.appendChild(newItem);
+} else {
+    // Bestehenden Artikel im DOM aktualisieren
+    const existingItem = document.getElementById(editingItemId);
+    if (existingItem) {
+        existingItem.dataset.artikelname = artikelname;
+        existingItem.dataset.artikellaengen = artikellaengen;
+        existingItem.dataset.artikelgroessen = artikelgroessen;
+        existingItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
+        existingItem.dataset.tauschquote = tauschquote;
+        existingItem.dataset.lieferrhythmus = lieferrhythmus;
+        existingItem.dataset.ausstattungsmenge = ausstattungsmenge;
+        existingItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
+        existingItem.onclick = () => openModal(existingItem.id); // Modal beim Klick öffnen
+    }
+}
+
 
         closeModal();
     }
 
     function deleteItem() {
-        if (editingItemId !== 'new') {
-            const item = document.getElementById(editingItemId);
+    if (editingItemId !== 'new') {
+        // Artikel aus dem DOM entfernen
+        const item = document.getElementById(editingItemId);
+        if (item) {
             item.remove();
-            closeModal();
         }
+
+        // Artikel aus localStorage entfernen
+        let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+        items = items.filter(item => item.id !== editingItemId); // Entferne den Artikel basierend auf seiner ID
+        localStorage.setItem('artikelItems', JSON.stringify(items));
+
+        // Modal schließen
+        closeModal();
+
+
     }
+}
+
+
+
+function generateUniqueId() {
+    return `item-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+}
 
 function saveItem() {
     const artikelname = document.getElementById('artikelname').value;
@@ -427,10 +454,9 @@ function saveItem() {
     const tauschquote = 2; // Tauschquote fest auf 2
     const lieferrhythmus = parseInt(document.getElementById('lieferrhythmus').value);
 
-    // Berechnung der Ausstattungsmenge basierend auf Lieferrhythmus
-    let ausstattungsmenge;
+    // Berechnung der Ausstattungsmenge
     const teileProMitarbeiter = vollzeitMitarbeiter * tauschquote;
-
+    let ausstattungsmenge;
     if (lieferrhythmus === 1) {
         ausstattungsmenge = teileProMitarbeiter * 3;
     } else if (lieferrhythmus === 3) {
@@ -438,33 +464,52 @@ function saveItem() {
     } else if (lieferrhythmus === 5) {
         ausstattungsmenge = teileProMitarbeiter * 2;
     } else {
-        ausstattungsmenge = 0; // Für ungültige Werte des Lieferrhythmus
+        ausstattungsmenge = 0;
     }
 
+    // Zusätzliche Berechnung basierend auf Mitarbeiteranzahl
+    if (vollzeitMitarbeiter > 50 && vollzeitMitarbeiter <= 100) {
+        ausstattungsmenge += ausstattungsmenge * 0.15; // 15% Aufschlag
+    } else if (vollzeitMitarbeiter <= 50) {
+        ausstattungsmenge += ausstattungsmenge * 0.30; // 30% Aufschlag
+    }
+
+    ausstattungsmenge = Math.round(ausstattungsmenge); // Ganze Zahl
+
+    // ID generieren oder bestehende verwenden
+    const newItemId = editingItemId === 'new' ? generateUniqueId() : editingItemId;
+
+    // Artikel speichern oder aktualisieren
     const itemData = {
+        id: newItemId,
         artikelname,
         artikellaengen,
         artikelgroessen,
         vollzeitMitarbeiter,
         tauschquote,
         lieferrhythmus,
-        ausstattungsmenge  // Berechnetes Ergebnis wird gespeichert
+        ausstattungsmenge,
+        teileProMitarbeiter,
     };
 
     let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
     if (editingItemId === 'new') {
-        items.push(itemData);
+        items.push(itemData); // Neuer Artikel
     } else {
         const index = items.findIndex(item => item.id === editingItemId);
-        items[index] = itemData;
+        if (index !== -1) {
+            items[index] = itemData; // Bestehenden Artikel aktualisieren
+        }
     }
-
     localStorage.setItem('artikelItems', JSON.stringify(items));
 
+    // DOM aktualisieren
+    const inventoryContainer = document.getElementById('inventory-container');
     if (editingItemId === 'new') {
-        const inventoryContainer = document.getElementById('inventory-container');
+        // Neuen Artikel zum DOM hinzufügen
         const newItem = document.createElement('div');
         newItem.className = 'inventory-item';
+        newItem.id = newItemId;
         newItem.dataset.artikelname = artikelname;
         newItem.dataset.artikellaengen = artikellaengen;
         newItem.dataset.artikelgroessen = artikelgroessen;
@@ -472,28 +517,55 @@ function saveItem() {
         newItem.dataset.tauschquote = tauschquote;
         newItem.dataset.lieferrhythmus = lieferrhythmus;
         newItem.dataset.ausstattungsmenge = ausstattungsmenge;
-        newItem.id = `item-${Date.now()}`;
         newItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
         newItem.onclick = () => openModal(newItem.id);
         inventoryContainer.appendChild(newItem);
     } else {
-        const item = document.getElementById(editingItemId);
-        item.dataset.artikelname = artikelname;
-        item.dataset.artikellaengen = artikellaengen;
-        item.dataset.artikelgroessen = artikelgroessen;
-        item.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-        item.dataset.tauschquote = tauschquote;
-        item.dataset.lieferrhythmus = lieferrhythmus;
-        item.dataset.ausstattungsmenge = ausstattungsmenge;
-        item.innerHTML = `<span class="item-label">${artikelname}</span>`;
+        // Bestehenden Artikel im DOM aktualisieren
+        const existingItem = document.getElementById(editingItemId);
+        if (existingItem) {
+            existingItem.dataset.artikelname = artikelname;
+            existingItem.dataset.artikellaengen = artikellaengen;
+            existingItem.dataset.artikelgroessen = artikelgroessen;
+            existingItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
+            existingItem.dataset.tauschquote = tauschquote;
+            existingItem.dataset.lieferrhythmus = lieferrhythmus;
+            existingItem.dataset.ausstattungsmenge = ausstattungsmenge;
+            existingItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
+        }
     }
 
+    // Modal schließen
     closeModal();
 }
 
-    document.addEventListener('DOMContentLoaded', () => {
+
+function loadItems() {
+    const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+    const inventoryContainer = document.getElementById('inventory-container');
+    inventoryContainer.innerHTML = ''; // Vorherigen Inhalt leeren
+
+    items.forEach(item => {
+        const newItem = document.createElement('div');
+        newItem.className = 'inventory-item';
+        newItem.id = item.id;
+        newItem.dataset.artikelname = item.artikelname;
+        newItem.dataset.artikellaengen = item.artikellaengen;
+        newItem.dataset.artikelgroessen = item.artikelgroessen;
+        newItem.dataset.vollzeitMitarbeiter = item.vollzeitMitarbeiter;
+        newItem.dataset.tauschquote = item.tauschquote;
+        newItem.dataset.lieferrhythmus = item.lieferrhythmus;
+        newItem.dataset.ausstattungsmenge = item.ausstattungsmenge;
+        newItem.innerHTML = `<span class="item-label">${item.artikelname}</span>`;
+        newItem.onclick = () => openModal(newItem.id);
+        inventoryContainer.appendChild(newItem);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     loadItems();
 });
+
 
 function loadItems() {
     const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
