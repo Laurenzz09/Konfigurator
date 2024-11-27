@@ -15,7 +15,7 @@
         background-attachment: fixed;
         min-height: 100vh;
         color: #fff;
-        padding: 20px;
+        padding: 0px;
     }
     .main-container {
         display: flex;
@@ -24,22 +24,7 @@
         justify-content: center;
         min-height: 100vh;
         background: rgba(0, 0, 0, 0.5);
-        padding: 20px;
-    }
-    .language-selector {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        display: flex;
-        align-items: center;
-    }
-    .language-selector select {
-        padding: 5px;
-        border-radius: 5px;
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        color: #fff;
-        margin-left: 10px;
+        padding: 50px;
     }
     .config-container {
         display: flex;
@@ -95,6 +80,23 @@
     .config-box button:hover {
         background-color: #0056b3;
     }
+    .navigation-buttons {
+        margin-bottom: 20px;
+    }
+    .navigation-buttons a {
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 10px;
+        background-color: #00ace3;
+        color: white;
+        border-radius: 5px;
+        font-weight: 500;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.3s ease;
+    }
+    .navigation-buttons a:hover {
+        background-color: #fbba00;
+    }
     .result {
         margin-top: 20px;
         font-size: 1.3em;
@@ -102,185 +104,80 @@
         background: rgba(0, 0, 0, 0.3);
         padding: 10px;
         border-radius: 5px;
-    }
-    .view-results {
-        position: fixed;
-        right: 20px;
-        top: 60px;
-        padding: 10px 20px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        z-index: 1000;
-        transition: background-color 0.3s;
-    }
-    .view-results:hover {
-        background-color: #218838;
-    }
-    .backButton {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        padding: 10px 20px;
-        background-color: #00ace3;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-    .backButton:hover {
-        background-color: #fbba00;
-    }
-    .add-box, .remove-box {
-        cursor: pointer;
-        font-size: 1.5em;
-        position: absolute;
-        top: 10px;
-        color: #fff;
-    }
-    .add-box {
-        right: 40px;
-    }
-    .remove-box {
-        right: 10px;
-    }
-    select, button, input {
-        outline: none;
-    }
-    @media (max-width: 768px) {
-        .config-box {
-            width: calc(50% - 40px);
-        }
-    }
-    @media (max-width: 480px) {
-        .config-box {
-            width: calc(100% - 40px);
-        }
+
     }
   </style>
 </head>
 <body>
 
-<!-- Zurück zur Startseite Button -->
-<a href="index.html" class="backButton" id="backButton">Zurück zur Startseite</a>
-
-<div class="language-selector">
-  <img id="language-flag" src="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png" alt="Language Flag" style="width:30px; vertical-align: middle; margin-right: 5px;">
-  <select id="language-select" onchange="changeLanguage()">
-    <option value="de" data-image="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png">Deutsch</option>
-    <option value="en" data-image="https://www.countryflags.com/wp-content/uploads/united-kingdom-flag-png-large.png">English</option>
-  </select>
-</div>
-
-<button class="view-results" onclick="viewResults()">Ergebnisse anzeigen</button>
-
 <div class="main-container">
-  <div class="config-container" id="config-container">
-    <div class="config-box" id="config-box-1">
-      <span class="add-box" onclick="addBox()">&#43;</span>
-      <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
-      <h2>Artikel 1</h2>
-      <label for="artikelname-1">Artikelname:</label>
-      <input type="text" id="artikelname-1" name="artikelname">
+  <h1>Schrankberechnung</h1>
+  <div class="navigation-buttons">
+    <a href="resultsTabelle.html">Zur Tabelle</a>
+    <a href="konfiguratorNew.html">Zum Konfigurator</a>
+  </div>
+  <div class="config-container">
+    <div class="config-box">
+      <h2>Manuelle Eingabe</h2>
+      <label for="teileProMitarbeiter">Mitarbeiter:</label>
+      <input type="number" id="teileProMitarbeiter" placeholder="z.B. 10">
 
-      <label for="vollzeitMitarbeiter-1">Anzahl der Vollzeitmitarbeiter (100%):</label>
-      <input type="number" id="vollzeitMitarbeiter-1" name="vollzeitMitarbeiter">
+      <button onclick="calculateManual()">Berechnen</button>
+      <div class="result" id="manualResult"></div>
+    </div>
 
-      <label for="teilzeitMitarbeiter-1">Anzahl der Teilzeitmitarbeiter (50%):</label>
-      <input type="number" id="teilzeitMitarbeiter-1" name="teilzeitMitarbeiter">
+    <div class="config-box">
+      <h2>Daten übernehmen</h2>
+      <button onclick="loadData()">Daten aus Tabelle laden</button>
+      <div class="result" id="loadedData"></div>
+    </div>
 
-      <label for="wäscheWechsel-1">Anzahl der Wäsche-Wechsel pro Mitarbeiter:</label>
-      <input type="number" id="wäscheWechsel-1" name="wäscheWechsel">
-
-      <button type="button" onclick="calculate('config-box-1')">Berechnen</button>
-      <div class="result" id="result-1"></div>
+    <div class="config-box">
+      <h2>Empfohlene Anzahl an Schränken</h2>
+      <div class="result">
+        <strong>Manuelle Daten:</strong>
+        <span id="recommendedManual"></span><br>
+        <strong>Übertragene Daten:</strong>
+        <span id="recommendedTransferred"></span>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  let boxCounter = 1;
+  const FÜLLMENGE_SCHRANK = 80; // Füllmenge festgelegt
+  const TAUSCHQUOTE = 2; // Tauschquote festgelegt
 
-  function addBox() {
-      boxCounter++;
-      const container = document.getElementById('config-container');
-      const newBox = document.createElement('div');
-      newBox.classList.add('config-box');
-      newBox.id = `config-box-${boxCounter}`;
-      newBox.innerHTML = `
-          <span class="add-box" onclick="addBox()">&#43;</span>
-          <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
-          <h2>Artikel ${boxCounter}</h2>
-          <label for="artikelname-${boxCounter}">Artikelname:</label>
-          <input type="text" id="artikelname-${boxCounter}" name="artikelname">
+  function calculateManual() {
+      const teileProMitarbeiter = parseFloat(document.getElementById('teileProMitarbeiter').value) || 0;
 
-          <label for="vollzeitMitarbeiter-${boxCounter}">Anzahl der Vollzeitmitarbeiter (100%):</label>
-          <input type="number" id="vollzeitMitarbeiter-${boxCounter}" name="vollzeitMitarbeiter">
+      // Berechnung der Tauschmenge und Schränke
+      const tauschmenge = teileProMitarbeiter * TAUSCHQUOTE;
+      const anzahlSchränke = Math.ceil((teileProMitarbeiter * 0.5) / FÜLLMENGE_SCHRANK);
 
-          <label for="teilzeitMitarbeiter-${boxCounter}">Anzahl der Teilzeitmitarbeiter (50%):</label>
-          <input type="number" id="teilzeitMitarbeiter-${boxCounter}" name="teilzeitMitarbeiter">
-
-          <label for="wäscheWechsel-${boxCounter}">Anzahl der Wäsche-Wechsel pro Mitarbeiter:</label>
-          <input type="number" id="wäscheWechsel-${boxCounter}" name="wäscheWechsel">
-
-          <button type="button" onclick="calculate('config-box-${boxCounter}')">Berechnen</button>
-          <div class="result" id="result-${boxCounter}"></div>
-      `;
-      container.appendChild(newBox);
+      // Ergebnisse anzeigen
+      document.getElementById('manualResult').innerText = `Tauschmenge: ${tauschmenge}`;
+      document.getElementById('recommendedManual').innerText = `${anzahlSchränke} Schränke`;
   }
 
-  function removeBox(element) {
-      const box = element.parentElement;
-      box.remove();
-  }
-
-  function calculate(boxId) {
-      const box = document.getElementById(boxId);
-      const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
-      const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
-      const wäscheWechsel = parseFloat(box.querySelector('input[name="wäscheWechsel"]').value) || 0;
-
-      const teilzeitMitarbeiterErgebnis = teilzeitMitarbeiter * 0.5;
-      const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiterErgebnis;
-      const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
-      const teileProMitarbeiter = mitarbeiterAnzahlGerundet * wäscheWechsel;
-
-      const resultDiv = box.querySelector('.result');
-      resultDiv.innerHTML = `
-          <strong>Ergebnisse:</strong><br>
-          Tauschmenge pro Woche: ${teileProMitarbeiter}
-      `;
-  }
-
-  function viewResults() {
-      const results = [];
-      for (let i = 1; i <= boxCounter; i++) {
-          const box = document.getElementById(`config-box-${i}`);
-          if (box) {
-              const artikelname = box.querySelector(`input[name="artikelname"]`).value;
-              const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
-              const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
-              const wäscheWechsel = parseFloat(box.querySelector('input[name="wäscheWechsel"]').value) || 0;
-
-              const teilzeitMitarbeiterErgebnis = teilzeitMitarbeiter * 0.5;
-              const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiterErgebnis;
-              const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
-              const teileProMitarbeiter = mitarbeiterAnzahlGerundet * wäscheWechsel;
-
-              results.push({
-                  artikelname,
-                  vollzeitMitarbeiter,
-                  teilzeitMitarbeiter,
-                  wäscheWechsel,
-                  teileProMitarbeiter
-              });
-          }
+  function loadData() {
+      const data = JSON.parse(localStorage.getItem('artikelItems')) || [];
+      if (data.length === 0) {
+          document.getElementById('loadedData').innerText = 'Keine Daten verfügbar.';
+          document.getElementById('recommendedTransferred').innerText = 'Keine Daten verfügbar.';
+          return;
       }
-      console.log(results); // Ergebnisse können hier verarbeitet oder gespeichert werden
+
+      // Gesamtsumme der Mitarbeiter berechnen
+      const totalEmployees = data.reduce((sum, item) => sum + (parseInt(item.vollzeitMitarbeiter) || 0), 0);
+
+      // Berechnung der Tauschmenge und Schränke
+      const tauschmenge = totalEmployees * TAUSCHQUOTE;
+      const anzahlSchränke = Math.ceil((totalEmployees * 0.5) / FÜLLMENGE_SCHRANK);
+
+      // Ergebnisse anzeigen
+      document.getElementById('loadedData').innerText = `Gesamtsumme der Mitarbeiter: ${totalEmployees}\nTauschmenge: ${tauschmenge}`;
+      document.getElementById('recommendedTransferred').innerText = `${anzahlSchränke} Schränke`;
   }
 </script>
 
