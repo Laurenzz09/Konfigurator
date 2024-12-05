@@ -61,7 +61,7 @@
             flex-direction: column;
             align-items: center; /* Zentriert den Inhalt horizontal */
             justify-content: center; /* Zentriert den Inhalt vertikal */
-            min-height: 80vh; /* Mindesgröße für vertikale Zentrierung */
+            min-height: 80vh; /* Mindestgröße für vertikale Zentrierung */
         }
 
 
@@ -126,7 +126,7 @@
             width: 150px;
             height: 150px;
             border-radius: 15px;
-            background-color: rgba(255, 255, 255, 0.2); /* Transparenter Hintergrund */
+            background-color: rgba(255, 255, 255, 0.3); /* Transparenter Hintergrund */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: center;
@@ -157,7 +157,7 @@
             transform: translate(-50%, -50%);
             width: 400px;
             padding: 20px 30px; /* Vertikales und horizontales Padding */
-            background-color: rgba(255, 255, 255, 0.2); /* Transparenter Hintergrund für die modale Box */
+            background-color: rgba(255, 255, 255, 0.3); /* Transparenter Hintergrund für die modale Box */
             color: #fff; /* Weiße Schrift */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -187,22 +187,87 @@
             cursor: pointer;
         }
 
-        .modal .save-button {
-            background-color: #28a745;
-            color: #fff;
-        }
 
-        .modal .close-button {
-            background-color: #dc3545;
-            color: #fff;
-            margin-right: 10px;
-        }
+.saveButton {
+  padding: 0.7em 1.5em; /* Weniger Padding */
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  letter-spacing: 3px; /* Weniger Abstand zwischen Buchstaben */
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #32cd32;
+  transition: all 500ms; /* Kürzere Übergangszeit */
+  font-size: 13px; /* Kleinere Schriftgröße */
+  position: relative;
+  overflow: hidden;
+  outline: 2px solid #32cd32;
+}
 
-        .modal .delete-button {
-            background-color: #b22222;
-            color: #fff;
-            margin-left: 16px;
-        }
+.saveButton:hover {
+  color: #ffffff;
+  transform: scale(1.05); /* Weniger Vergrößerung beim Hover */
+  outline: 2px solid #ffffff;
+  box-shadow: 3px 4px 14px -3px #32cd32; /* Weniger intensiver Schatten */
+}
+
+.saveButton::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: #32cd32;
+  transform: skewX(45deg);
+  z-index: -1;
+  transition: width 500ms; /* Kürzere Übergangszeit */
+}
+
+.saveButton:hover::before {
+  width: 250%;
+}
+
+.closeButton {
+  padding: 0.7em 1.5em; /* Weniger Padding */
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  letter-spacing: 3px; /* Weniger Abstand zwischen Buchstaben */
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #e43b3a;
+  transition: all 500ms; /* Kürzere Übergangszeit */
+  font-size: 13px; /* Kleinere Schriftgröße */
+  position: relative;
+  overflow: hidden;
+  outline: 2px solid #e43b3a;
+}
+
+.closeButton:hover {
+  color: #ffffff;
+  transform: scale(1.05); /* Weniger Vergrößerung beim Hover */
+  outline: 2px solid #ffffff;
+  box-shadow: 3px 4px 14px -3px #e43b3a; /* Weniger intensiver Schatten */
+}
+
+.closeButton::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: #e43b3a;
+  transform: skewX(45deg);
+  z-index: -1;
+  transition: width 500ms; /* Kürzere Übergangszeit */
+}
+
+.closeButton:hover::before {
+  width: 250%;
+}
+
 
 
         /* Zeilenweise Anordnung */
@@ -244,14 +309,211 @@
     background-color: #45a049; /* Dunklerer Grünton beim Hover */
 }
 
+/* Basis-Stil für den Button */
+.Btn {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* SVG mittig ausrichten */
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: 0.3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background: rgb(255, 135, 65);
+  background: linear-gradient(
+    250deg,
+    rgba(255, 135, 65, 1) 15%,
+    rgba(255, 65, 65, 1) 65%
+  );
+}
+
+/* Symbol-Stil */
+.sign {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+
+/* Standard-Symbol */
+.sign svg {
+  width: 18px;
+  transition: transform 0.3s ease;
+}
+
+.sign svg path {
+  fill: white;
+}
+
+/* Text-Stil */
+.text {
+  position: relative;
+  width: 0;
+  opacity: 0;
+  color: white;
+  font-size: 1em;
+  font-weight: 600;
+  margin-left: 0;
+  transition: opacity 0.3s ease, width 0.3s ease, margin-left 0.3s ease;
+}
+
+/* Hover-Effekt für den Button */
+.Btn:hover {
+  width: 140px; /* Platz schaffen für den Text */
+  border-radius: 40px;
+  justify-content: flex-start; /* Symbol nach links ausrichten */
+  transition-duration: 0.3s;
+}
+
+/* Symbol-Ausrichtung beim Hover */
+.Btn:hover .sign {
+  width: 30px;
+  justify-content: center; /* Symbol bleibt links ausgerichtet */
+  transition-duration: 0.3s;
+}
+
+/* Text einblenden beim Hover */
+.Btn:hover .text {
+  opacity: 1;
+  width: auto;
+  margin-left: 10px; /* Platz zwischen Symbol und Text */
+  transition-duration: 0.3s;
+}
+
+
+/* button click effect*/
+.Btn:active {
+  transform: translate(2px, 2px);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between; /* Buttons verteilen */
+  align-items: center; /* Vertikal zentrieren */
+  margin-top: 20px; /* Abstand nach oben */
+  gap: 10px; /* Abstand zwischen den Buttons */
+}
+
+.modal-buttons .Btn {
+  margin-left: auto; /* Löschen-Button ganz rechts */
+}
+
+/* Basis-Stil für die Checkbox-Komponente */
+.container {
+  display: inline-block;
+  position: relative;
+  margin-right: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  user-select: none;
+}
+
+/* Verstecke die Standard-Checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Custom Checkbox */
+.checkmark {
+  display: inline-block;
+  height: 1.3em;
+  width: 1.3em;
+  background: #606062;
+  border-radius: 5px;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3), 0px 1px 1px rgba(0, 0, 0, 0.5);
+  margin-right: 10px;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+/* Checkmark bei ausgewähltem Zustand */
+.container input:checked ~ .checkmark {
+  background-image: linear-gradient(#b9e9b3, #a8e4a0);
+}
+
+/* Indikator anzeigen, wenn ausgewählt */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 0.5em;
+  height: 0.8em;
+  border: solid white;
+  border-width: 0 0.15em 0.15em 0;
+}
+
+/* Indikator sichtbar machen */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 4;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmation-content {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 20px 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 400px;
+}
+
+.confirmation-content h3 {
+    margin-bottom: 10px;
+}
+
+.confirmation-content p {
+    margin-bottom: 20px;
+}
+
+.confirmation-content .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+
 
     </style>
 </head>
 <body>
 
+
 <div class="background-darken"></div>
 <!-- Restlicher Inhalt -->
-
+<div class="confirmation-modal" id="confirmation-modal">
+    <div class="confirmation-content">
+        <h3>Möchten Sie wirklich alle Daten löschen?</h3>
+        <p>Dies kann nicht rückgängig gemacht werden.</p>
+        <div class="modal-buttons">
+            <button class="saveButton" onclick="confirmClearStorage()">Ja, alles löschen</button>
+            <button class="closeButton" onclick="closeConfirmationModal()">Abbrechen</button>
+        </div>
+    </div>
+</div>
 
 <!-- Abdunklung des Hintergrunds, wenn eine Box geöffnet ist -->
 <div class="background-overlay" id="background-overlay"></div>
@@ -261,7 +523,7 @@
 
 <div class="language-selector">
     <img id="language-flag" src="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png" alt="Language Flag" style="width:30px; vertical-align: middle; margin-right: 5px;">
-    <select id="language-select" onchange="changeLanguage()">
+    <label for="language-select"></label><select id="language-select" onchange="changeLanguage()">
         <option value="de" data-image="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png">Deutsch</option>
         <option value="en" data-image="https://www.countryflags.com/wp-content/uploads/united-kingdom-flag-png-large.png">English</option>
     </select>
@@ -287,7 +549,6 @@
     <h2>Artikel hinzufügen</h2>
     <label for="artikelname">Artikelname</label>
     <input type="text" id="artikelname">
-
     <div class="row">
         <div>
             <label for="artikellaengen">Artikel Längen</label>
@@ -303,22 +564,52 @@
     <label for="vollzeitMitarbeiter">Mitarbeiter</label>
     <input type="number" id="vollzeitMitarbeiter">
 
-   <!-- <label for="tauschquote">Tauschquote pro Woche</label>
-    <input type="number" id="tauschquote" value="2" readonly> -->
 
-    <label for="lieferrhythmus">Lieferrhythmus</label>
-    <select id="lieferrhythmus">
-        <option value="1">1 pro Woche</option>
-        <option value="3">3 pro Woche</option>
-        <option value="5">5 pro Woche</option>
-    </select>
+    <label>Lieferrhythmus</label>
+    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+        <label class="container">1x pro Woche
+            <input type="radio" name="lieferrhythmus" value="1" id="lieferrhythmus-1" checked>
+            <div class="checkmark"></div>
+        </label>
+        <label class="container">3x pro Woche
+            <input type="radio" name="lieferrhythmus" value="3" id="lieferrhythmus-3">
+            <div class="checkmark"></div>
+        </label>
+        <label class="container">5x pro Woche
+            <input type="radio" name="lieferrhythmus" value="5" id="lieferrhythmus-5">
+            <div class="checkmark"></div>
+        </label>
+    </div>
 
-    <button class="save-button" onclick="saveItem()">Fertig</button>
-    <button class="close-button" onclick="closeModal()">Schließen</button>
-    <button class="delete-button" onclick="deleteItem()">Löschen</button>
-</div>
 
-<script>
+    <div class="modal-buttons">
+        <button class="saveButton" onclick="saveItem()">Fertig</button>
+        <button class="closeButton" onclick="closeModal()">Schließen</button>
+        <button class="Btn" onclick="deleteItem()">
+            <div class="sign">
+                <svg
+                        viewBox="0 0 16 16"
+                        class="bi bi-trash3-fill"
+                        fill="currentColor"
+                        height="18"
+                        width="18"
+                        xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                            d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+                    ></path>
+                </svg>
+            </div>
+            <div class="text">Delete</div>
+        </button>
+
+    </div>
+
+
+
+
+
+    <script>
     let currentLanguage = 'de'; // Standardmäßig Deutsch
     let editingItemId = null; // Um zu wissen, ob ein neues Element erstellt oder ein vorhandenes bearbeitet wird
 
@@ -378,47 +669,88 @@
     }
 
     function saveItem() {
-        const artikelname = document.getElementById('artikelname').value;
-        const artikellaengen = document.getElementById('artikellaengen').value;
-        const artikelgroessen = document.getElementById('artikelgroessen').value;
-        const vollzeitMitarbeiter = document.getElementById('vollzeitMitarbeiter').value;
-        const tauschquote = document.getElementById('tauschquote').value;
-        const lieferrhythmus = document.getElementById('lieferrhythmus').value;
+    console.log("saveItem() gestartet"); // Debugging
 
-        if (editingItemId === 'new') {
-    // Neuen Artikel zum DOM hinzufügen
-    const newItem = document.createElement('div');
-    newItem.className = 'inventory-item';
-    newItem.id = newItemId;
-    newItem.dataset.artikelname = artikelname;
-    newItem.dataset.artikellaengen = artikellaengen;
-    newItem.dataset.artikelgroessen = artikelgroessen;
-    newItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-    newItem.dataset.tauschquote = tauschquote;
-    newItem.dataset.lieferrhythmus = lieferrhythmus;
-    newItem.dataset.ausstattungsmenge = ausstattungsmenge;
-    newItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
-    newItem.onclick = () => openModal(newItem.id); // Modal beim Klick öffnen
-    inventoryContainer.appendChild(newItem);
-} else {
-    // Bestehenden Artikel im DOM aktualisieren
-    const existingItem = document.getElementById(editingItemId);
-    if (existingItem) {
-        existingItem.dataset.artikelname = artikelname;
-        existingItem.dataset.artikellaengen = artikellaengen;
-        existingItem.dataset.artikelgroessen = artikelgroessen;
-        existingItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-        existingItem.dataset.tauschquote = tauschquote;
-        existingItem.dataset.lieferrhythmus = lieferrhythmus;
-        existingItem.dataset.ausstattungsmenge = ausstattungsmenge;
-        existingItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
-        existingItem.onclick = () => openModal(existingItem.id); // Modal beim Klick öffnen
+    const artikelname = document.getElementById('artikelname').value.trim();
+    const artikellaengen = document.getElementById('artikellaengen').value.trim();
+    const artikelgroessen = document.getElementById('artikelgroessen').value.trim();
+    const vollzeitMitarbeiter = parseInt(document.getElementById('vollzeitMitarbeiter').value.trim()) || 0;
+
+    // Lieferrhythmus korrekt abfragen
+    const lieferrhythmusInput = document.querySelector('input[name="lieferrhythmus"]:checked');
+    if (!lieferrhythmusInput) {
+        console.error("Kein Lieferrhythmus ausgewählt!");
+        alert("Bitte wählen Sie einen Lieferrhythmus aus.");
+        return;
     }
+    const lieferrhythmus = parseInt(lieferrhythmusInput.value);
+
+    console.log("Artikelname:", artikelname);
+    console.log("Lieferrhythmus:", lieferrhythmus);
+
+
+    // Eingabefelder überprüfen
+    if (!artikelname || !artikellaengen || !artikelgroessen) {
+        alert("Bitte füllen Sie alle Felder aus.");
+        return;
+    }
+
+    // Tauschquote und Ausstattung berechnen
+    const tauschquote = 2; // Festgelegter Wert
+    const teileProMitarbeiter = vollzeitMitarbeiter * tauschquote;
+    let ausstattungsmenge;
+
+    if (lieferrhythmus === "1") {
+        ausstattungsmenge = teileProMitarbeiter * 3;
+    } else if (lieferrhythmus === "3") {
+        ausstattungsmenge = teileProMitarbeiter * 2.5;
+    } else if (lieferrhythmus === "5") {
+        ausstattungsmenge = teileProMitarbeiter * 2;
+    }
+
+    ausstattungsmenge = Math.round(ausstattungsmenge);
+
+    // Zusätzliche Berechnungen je nach Mitarbeiteranzahl
+    if (vollzeitMitarbeiter > 50 && vollzeitMitarbeiter <= 100) {
+        ausstattungsmenge += Math.round(ausstattungsmenge * 0.15);
+    } else if (vollzeitMitarbeiter <= 50) {
+        ausstattungsmenge += Math.round(ausstattungsmenge * 0.30);
+    }
+
+    const newItemId = editingItemId === 'new' ? generateUniqueId() : editingItemId;
+
+    const newItemData = {
+        id: newItemId,
+        artikelname,
+        artikellaengen,
+        artikelgroessen,
+        vollzeitMitarbeiter,
+        tauschquote,
+        lieferrhythmus,
+        ausstattungsmenge,
+    };
+
+    // Artikel in localStorage speichern
+    const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+    if (editingItemId === 'new') {
+        items.push(newItemData);
+    } else {
+        const index = items.findIndex(item => item.id === editingItemId);
+        if (index !== -1) {
+            items[index] = newItemData;
+        }
+    }
+
+    localStorage.setItem('artikelItems', JSON.stringify(items));
+
+    // DOM aktualisieren
+    loadItems();
+
+    // Modal schließen
+    closeModal();
 }
 
 
-        closeModal();
-    }
 
     function deleteItem() {
     if (editingItemId !== 'new') {
@@ -446,98 +778,6 @@ function generateUniqueId() {
     return `item-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
-function saveItem() {
-    const artikelname = document.getElementById('artikelname').value;
-    const artikellaengen = document.getElementById('artikellaengen').value;
-    const artikelgroessen = document.getElementById('artikelgroessen').value;
-    const vollzeitMitarbeiter = parseInt(document.getElementById('vollzeitMitarbeiter').value) || 0;
-    const tauschquote = 2; // Tauschquote fest auf 2
-    const lieferrhythmus = parseInt(document.getElementById('lieferrhythmus').value);
-
-    // Berechnung der Ausstattungsmenge
-    const teileProMitarbeiter = vollzeitMitarbeiter * tauschquote;
-    let ausstattungsmenge;
-    if (lieferrhythmus === 1) {
-        ausstattungsmenge = teileProMitarbeiter * 3;
-    } else if (lieferrhythmus === 3) {
-        ausstattungsmenge = teileProMitarbeiter * 2.5;
-    } else if (lieferrhythmus === 5) {
-        ausstattungsmenge = teileProMitarbeiter * 2;
-    } else {
-        ausstattungsmenge = 0;
-    }
-
-    // Zusätzliche Berechnung basierend auf Mitarbeiteranzahl
-    if (vollzeitMitarbeiter > 50 && vollzeitMitarbeiter <= 100) {
-        ausstattungsmenge += ausstattungsmenge * 0.15; // 15% Aufschlag
-    } else if (vollzeitMitarbeiter <= 50) {
-        ausstattungsmenge += ausstattungsmenge * 0.30; // 30% Aufschlag
-    }
-
-    ausstattungsmenge = Math.round(ausstattungsmenge); // Ganze Zahl
-
-    // ID generieren oder bestehende verwenden
-    const newItemId = editingItemId === 'new' ? generateUniqueId() : editingItemId;
-
-    // Artikel speichern oder aktualisieren
-    const itemData = {
-        id: newItemId,
-        artikelname,
-        artikellaengen,
-        artikelgroessen,
-        vollzeitMitarbeiter,
-        tauschquote,
-        lieferrhythmus,
-        ausstattungsmenge,
-        teileProMitarbeiter,
-    };
-
-    let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
-    if (editingItemId === 'new') {
-        items.push(itemData); // Neuer Artikel
-    } else {
-        const index = items.findIndex(item => item.id === editingItemId);
-        if (index !== -1) {
-            items[index] = itemData; // Bestehenden Artikel aktualisieren
-        }
-    }
-    localStorage.setItem('artikelItems', JSON.stringify(items));
-
-    // DOM aktualisieren
-    const inventoryContainer = document.getElementById('inventory-container');
-    if (editingItemId === 'new') {
-        // Neuen Artikel zum DOM hinzufügen
-        const newItem = document.createElement('div');
-        newItem.className = 'inventory-item';
-        newItem.id = newItemId;
-        newItem.dataset.artikelname = artikelname;
-        newItem.dataset.artikellaengen = artikellaengen;
-        newItem.dataset.artikelgroessen = artikelgroessen;
-        newItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-        newItem.dataset.tauschquote = tauschquote;
-        newItem.dataset.lieferrhythmus = lieferrhythmus;
-        newItem.dataset.ausstattungsmenge = ausstattungsmenge;
-        newItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
-        newItem.onclick = () => openModal(newItem.id);
-        inventoryContainer.appendChild(newItem);
-    } else {
-        // Bestehenden Artikel im DOM aktualisieren
-        const existingItem = document.getElementById(editingItemId);
-        if (existingItem) {
-            existingItem.dataset.artikelname = artikelname;
-            existingItem.dataset.artikellaengen = artikellaengen;
-            existingItem.dataset.artikelgroessen = artikelgroessen;
-            existingItem.dataset.vollzeitMitarbeiter = vollzeitMitarbeiter;
-            existingItem.dataset.tauschquote = tauschquote;
-            existingItem.dataset.lieferrhythmus = lieferrhythmus;
-            existingItem.dataset.ausstattungsmenge = ausstattungsmenge;
-            existingItem.innerHTML = `<span class="item-label">${artikelname}</span>`;
-        }
-    }
-
-    // Modal schließen
-    closeModal();
-}
 
 
 function loadItems() {
@@ -545,6 +785,14 @@ function loadItems() {
     const inventoryContainer = document.getElementById('inventory-container');
     inventoryContainer.innerHTML = ''; // Vorherigen Inhalt leeren
 
+    // Plus-Button immer hinzufügen
+    const plusItem = document.createElement('div');
+    plusItem.className = 'inventory-item';
+    plusItem.innerHTML = `<span class="plus-icon">+</span>`;
+    plusItem.onclick = () => openModal('new');
+    inventoryContainer.appendChild(plusItem);
+
+    // Gespeicherte Artikel hinzufügen
     items.forEach(item => {
         const newItem = document.createElement('div');
         newItem.className = 'inventory-item';
@@ -553,7 +801,6 @@ function loadItems() {
         newItem.dataset.artikellaengen = item.artikellaengen;
         newItem.dataset.artikelgroessen = item.artikelgroessen;
         newItem.dataset.vollzeitMitarbeiter = item.vollzeitMitarbeiter;
-        newItem.dataset.tauschquote = item.tauschquote;
         newItem.dataset.lieferrhythmus = item.lieferrhythmus;
         newItem.dataset.ausstattungsmenge = item.ausstattungsmenge;
         newItem.innerHTML = `<span class="item-label">${item.artikelname}</span>`;
@@ -562,38 +809,35 @@ function loadItems() {
     });
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
     loadItems();
 });
 
 
-function loadItems() {
-    const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
-    const inventoryContainer = document.getElementById('inventory-container');
-
-    items.forEach((item, index) => {
-        const newItem = document.createElement('div');
-        newItem.className = 'inventory-item';
-        newItem.dataset.artikelname = item.artikelname;
-        newItem.dataset.artikellaengen = item.artikellaengen;
-        newItem.dataset.artikelgroessen = item.artikelgroessen;
-        newItem.dataset.vollzeitMitarbeiter = item.vollzeitMitarbeiter;
-        newItem.dataset.tauschquote = item.tauschquote;
-        newItem.dataset.lieferrhythmus = item.lieferrhythmus;
-        newItem.id = `item-${index}`;
-        newItem.innerHTML = `<span class="item-label">${item.artikelname}</span>`;
-        newItem.onclick = () => openModal(newItem.id);
-        inventoryContainer.appendChild(newItem);
-    });
+function clearStorage() {
+    // Zeige das Bestätigungs-Pop-up an
+    const confirmationModal = document.getElementById('confirmation-modal');
+    confirmationModal.style.display = 'flex';
 }
 
-function clearStorage() {
+function confirmClearStorage() {
+    // Speicher löschen und Ansicht zurücksetzen
     localStorage.removeItem('artikelItems');
     const inventoryContainer = document.getElementById('inventory-container');
     inventoryContainer.innerHTML = `<div class="inventory-item" onclick="openModal('new')">
                                         <span class="plus-icon">+</span>
                                     </div>`;
+    closeConfirmationModal(); // Schließe das Modal nach Bestätigung
 }
+
+function closeConfirmationModal() {
+    // Schließe das Bestätigungs-Pop-up
+    const confirmationModal = document.getElementById('confirmation-modal');
+    confirmationModal.style.display = 'none';
+}
+
+
 
 
 </script>

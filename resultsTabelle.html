@@ -46,22 +46,76 @@
         }
 
         .backButton, .downloadButton {
-            padding: 10px 20px;
-            background-color: #ff9800;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: 500;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s ease;
-            margin-right: 10px;
-        }
+    display: flex; /* Flexbox aktivieren */
+    align-items: center; /* Vertikal zentrieren */
+    justify-content: center; /* Horizontal zentrieren */
+    padding: 10px 20px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    text-align: center; /* Sicherstellen, dass der Text im Button zentriert bleibt */
+}
+
 
         .backButton:hover, .downloadButton:hover {
             background-color: #e68900;
         }
+
+.button {
+  line-height: 1;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.75em 1em;
+  padding-right: 1.25em;
+  color: #fff;
+  border: 1px solid transparent;
+  font-weight: 700;
+  border-radius: 2em;
+  font-size: 1rem;
+  box-shadow: 0 0.7em 1.5em -0.5em hsla(36, 100%, 60%, 0.745);
+
+  transition: transform 0.3s;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255, 152, 0, 1) 0%,
+    rgba(255, 179, 51, 1) 100%
+  );
+}
+
+.button__icon {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.button:hover {
+  border-color: #f4f5f2;
+}
+
+.button:active {
+  transform: scale(0.98);
+  box-shadow: 0 0.5em 1.5em -0.5em hsla(249, 62%, 51%, 0.745);
+}
+        /* Button-Container mit Flexbox */
+.button-container {
+    display: flex; /* Flexbox aktivieren */
+    justify-content: center; /* Buttons horizontal zentrieren */
+    gap: 15px; /* Abstand zwischen den Buttons */
+    margin-top: 20px; /* Abstand nach oben */
+    flex-wrap: wrap; /* Buttons umbrechen, falls Platz nicht ausreicht */
+}
+
+
     </style>
 </head>
 <body>
@@ -77,8 +131,10 @@
         <th>Mitarbeiter</th>
         <th>Tauschquote</th>
         <th>Lieferrhythmus</th>
+        <th>Varianten</th>
         <th>Ausstattungsmenge</th>
         <th>Tauschmenge pro Woche</th>
+
     </tr>
     </thead>
     <tbody>
@@ -86,12 +142,31 @@
     </tbody>
 </table>
 
-<div>
+<div class="button-container">
     <a href="konfiguratorNew.html" class="backButton">Zurück</a>
-    <button class="downloadButton" onclick="downloadExcel()">Tabelle als Excel herunterladen</button>
+    <button class="button" onclick="downloadExcel()">
+        <svg
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                viewBox="0 0 24 24"
+                height="40"
+                width="40"
+                class="button__icon"
+                xmlns="http://www.w3.org/2000/svg"
+        >
+            <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+            <path d="M7 11l5 5l5 -5"></path>
+            <path d="M12 4l0 12"></path>
+        </svg>
+        <span class="button__text">Download</span>
+    </button>
     <a href="systemkonfigurator.html" class="backButton">Zum Systemkonfigurator</a>
-
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -104,16 +179,22 @@
         tableBody.innerHTML = ''; // Bestehende Zeilen löschen, um doppelte Einträge zu vermeiden
 
         items.forEach(item => {
+            const längen = parseInt(item.artikellaengen) || 0;
+            const größen = parseInt(item.artikelgroessen) || 0;
+            const varianten = längen * größen; // Variantenberechnung
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.artikelname}</td>
-                <td>${item.artikellaengen}</td>
-                <td>${item.artikelgroessen}</td>
+                <td>${längen}</td>
+                <td>${größen}</td>
                 <td>${item.vollzeitMitarbeiter}</td>
                 <td>${item.tauschquote}</td>
                 <td>${item.lieferrhythmus}</td>
+                <td>${varianten}</td>
                 <td>${item.ausstattungsmenge}</td>
                 <td>${item.teileProMitarbeiter}</td>
+
             `;
             tableBody.appendChild(row);
         });
@@ -124,7 +205,6 @@
         const workbook = XLSX.utils.table_to_book(table, { sheet: "Ergebnisse" });
         XLSX.writeFile(workbook, "ArtikelErgebnisse.xlsx");
     }
-
 </script>
 
 </body>
