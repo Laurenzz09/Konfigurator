@@ -119,8 +119,8 @@
   <div class="config-container">
     <div class="config-box">
       <h2>Manuelle Eingabe</h2>
-      <label for="teileProMitarbeiter">Mitarbeiter:</label>
-      <input type="number" id="teileProMitarbeiter" placeholder="z.B. 10">
+      <label for="mitarbeiter">Mitarbeiter:</label>
+      <input type="number" id="mitarbeiter" placeholder="z.B. 10">
 
       <button onclick="calculateManual()">Berechnen</button>
       <div class="result" id="manualResult"></div>
@@ -149,15 +149,18 @@
   const TAUSCHQUOTE = 2; // Tauschquote festgelegt
 
   function calculateManual() {
-      const teileProMitarbeiter = parseFloat(document.getElementById('teileProMitarbeiter').value) || 0;
+    // Hole den Wert aus dem Eingabefeld
+    const mitarbeiter = parseFloat(document.getElementById('mitarbeiter').value) || 0;
 
-      // Berechnung der Tauschmenge und Schränke
-      const tauschmenge = teileProMitarbeiter * TAUSCHQUOTE;
-      const anzahlSchränke = Math.ceil((teileProMitarbeiter * 0.5) / FÜLLMENGE_SCHRANK);
+    // Berechnung der Tauschmenge und Schränke
+    const tauschmengeMitarbeiter = mitarbeiter * TAUSCHQUOTE;
+    const anzahlSchränke = Math.ceil((tauschmengeMitarbeiter * 0.5) / FÜLLMENGE_SCHRANK);
 
-      // Ergebnisse anzeigen
-      document.getElementById('manualResult').innerText = `Tauschmenge: ${tauschmenge}`;
-      document.getElementById('recommendedManual').innerText = `${anzahlSchränke} Schränke`;
+    // Ergebnisse anzeigen
+    document.getElementById('manualResult').innerText = `Tauschmenge: ${tauschmengeMitarbeiter}`;
+    document.getElementById('recommendedManual').innerText = `${anzahlSchränke} Schränke`;
+
+
   }
 
   function loadData() {
@@ -169,15 +172,16 @@
       }
 
       // Gesamtsumme der Mitarbeiter berechnen
-      const totalEmployees = data.reduce((sum, item) => sum + (parseInt(item.vollzeitMitarbeiter) || 0), 0);
+      const totalEmployees = data.reduce((sum, item) => {
+        const employees = parseInt(item.vollzeitMitarbeiter) || 0;
+        console.log(`Artikel: ${item.artikelname}, Mitarbeiter: ${employees}`);
+        return sum + employees;
+    }, 0);
+    console.log("Gesamtsumme der Mitarbeiter:", totalEmployees);
 
-      // Berechnung der Tauschmenge und Schränke
-      const tauschmenge = totalEmployees * TAUSCHQUOTE;
-      const anzahlSchränke = Math.ceil((totalEmployees * 0.5) / FÜLLMENGE_SCHRANK);
 
-      // Ergebnisse anzeigen
-      document.getElementById('loadedData').innerText = `Gesamtsumme der Mitarbeiter: ${totalEmployees}\nTauschmenge: ${tauschmenge}`;
-      document.getElementById('recommendedTransferred').innerText = `${anzahlSchränke} Schränke`;
+
+
   }
 </script>
 
