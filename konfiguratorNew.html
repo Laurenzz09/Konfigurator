@@ -668,54 +668,35 @@
         overlay.style.display = 'none';
     }
 
-    function saveItem() {
-    console.log("saveItem() gestartet"); // Debugging
-
+function saveItem() {
     const artikelname = document.getElementById('artikelname').value.trim();
     const artikellaengen = document.getElementById('artikellaengen').value.trim();
     const artikelgroessen = document.getElementById('artikelgroessen').value.trim();
     const vollzeitMitarbeiter = parseInt(document.getElementById('vollzeitMitarbeiter').value.trim()) || 0;
 
-    // Lieferrhythmus korrekt abfragen
     const lieferrhythmusInput = document.querySelector('input[name="lieferrhythmus"]:checked');
     if (!lieferrhythmusInput) {
-        console.error("Kein Lieferrhythmus ausgewählt!");
         alert("Bitte wählen Sie einen Lieferrhythmus aus.");
         return;
     }
     const lieferrhythmus = parseInt(lieferrhythmusInput.value);
 
-    console.log("Artikelname:", artikelname);
-    console.log("Lieferrhythmus:", lieferrhythmus);
-
-
-    // Eingabefelder überprüfen
     if (!artikelname || !artikellaengen || !artikelgroessen) {
         alert("Bitte füllen Sie alle Felder aus.");
         return;
     }
 
-    // Tauschquote und Ausstattung berechnen
     const tauschquote = 2; // Festgelegter Wert
     const teileProMitarbeiter = vollzeitMitarbeiter * tauschquote;
-    let ausstattungsmenge;
 
-    if (lieferrhythmus === "1") {
-        ausstattungsmenge = teileProMitarbeiter * 3;
-    } else if (lieferrhythmus === "3") {
-        ausstattungsmenge = teileProMitarbeiter * 2.5;
-    } else if (lieferrhythmus === "5") {
-        ausstattungsmenge = teileProMitarbeiter * 2;
-    }
+    let ausstattungsmenge = teileProMitarbeiter *
+        (lieferrhythmus === 1 ? 3 : lieferrhythmus === 3 ? 2.5 : 2);
 
-    ausstattungsmenge = Math.round(ausstattungsmenge);
-
-    // Zusätzliche Berechnungen je nach Mitarbeiteranzahl
-    if (vollzeitMitarbeiter > 50 && vollzeitMitarbeiter <= 100) {
-        ausstattungsmenge += Math.round(ausstattungsmenge * 0.15);
-    } else if (vollzeitMitarbeiter <= 50) {
-        ausstattungsmenge += Math.round(ausstattungsmenge * 0.30);
-    }
+    ausstattungsmenge = Math.round(
+        ausstattungsmenge *
+        (vollzeitMitarbeiter > 50 && vollzeitMitarbeiter <= 100 ? 1.15 :
+        vollzeitMitarbeiter <= 50 ? 1.3 : 1)
+    );
 
     const newItemId = editingItemId === 'new' ? generateUniqueId() : editingItemId;
 
@@ -728,27 +709,21 @@
         tauschquote,
         lieferrhythmus,
         ausstattungsmenge,
+        teileProMitarbeiter, // Füge dies korrekt hinzu
     };
 
-    // Artikel in localStorage speichern
     const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
     if (editingItemId === 'new') {
         items.push(newItemData);
     } else {
         const index = items.findIndex(item => item.id === editingItemId);
-        if (index !== -1) {
-            items[index] = newItemData;
-        }
+        if (index !== -1) items[index] = newItemData;
     }
-
     localStorage.setItem('artikelItems', JSON.stringify(items));
-
-    // DOM aktualisieren
     loadItems();
-
-    // Modal schließen
     closeModal();
 }
+
 
 
 
