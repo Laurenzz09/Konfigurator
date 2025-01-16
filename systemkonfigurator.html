@@ -17,172 +17,376 @@
         color: #fff;
         padding: 0px;
     }
-    .main-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 50px;
-    }
-    .config-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-    }
-    .config-box {
-        position: relative;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        padding: 20px;
-        margin: 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-        width: calc(33% - 40px);
-        box-sizing: border-box;
-        transition: box-shadow 0.3s, background 0.3s;
-    }
-    .config-box:hover {
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        background: rgba(255, 255, 255, 0.3);
-    }
-    .config-box h2 {
-        margin-top: 0;
-    }
-    .config-box label {
-        display: block;
-        margin: 15px 0 5px;
-        font-size: 1.1em;
-    }
-    .config-box input {
-        width: calc(100% - 22px);
-        padding: 10px;
-        margin-bottom: 15px;
-        border: none;
-        border-radius: 5px;
-        background: rgba(255, 255, 255, 0.4);
-        color: #000;
-        font-size: 1em;
-    }
-    .config-box button {
-        width: 100%;
-        padding: 15px;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        font-size: 1.1em;
-    }
-    .config-box button:hover {
-        background-color: #0056b3;
-    }
-    .navigation-buttons {
-        margin-bottom: 20px;
-    }
-    .navigation-buttons a {
-        text-decoration: none;
-        padding: 10px 20px;
-        margin: 0 10px;
-        background-color: #00ace3;
-        color: white;
-        border-radius: 5px;
-        font-weight: 500;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        transition: background-color 0.3s ease;
-    }
-    .navigation-buttons a:hover {
-        background-color: #fbba00;
-    }
-    .result {
-        margin-top: 20px;
-        font-size: 1.3em;
-        color: #fff;
-        background: rgba(0, 0, 0, 0.3);
-        padding: 10px;
-        border-radius: 5px;
+   .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 50px;
+}
 
-    }
+.config-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Zentriert die Inhalte */
+    width: 100%;
+    gap: 30px; /* Mehr Abstand zwischen den Boxen */
+    align-items: flex-start;
+    padding: 20px; /* Abstand innerhalb des Containers */
+}
+
+.config-box {
+    position: relative;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px); /* Mehr Blur für einen weicheren Effekt */
+    padding: 25px;
+    margin: 15px;
+    border-radius: 15px; /* Runde Ecken für ein modernes Design */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Stärkere Schatten für Tiefe */
+    width: calc(100% / 3 - 40px); /* Gleichmäßige Breite bei drei Spalten */
+    box-sizing: border-box;
+    transition: box-shadow 0.3s, background 0.3s;
+}
+
+.config-box:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5); /* Leicht verstärkte Schatten beim Hover */
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.config-box h2 {
+    margin-top: 0;
+    font-size: 1.4em;
+    color: #fff;
+    text-align: center; /* Überschriften zentrieren */
+}
+
+.config-box label {
+    display: block;
+    margin: 20px 0 10px;
+    font-size: 1.1em;
+    color: #ddd;
+}
+
+.config-box input {
+    width: 100%; /* Vollbreite für Eingabefelder */
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #000;
+    font-size: 1em;
+}
+
+.config-box button {
+    width: 100%;
+    padding: 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 8px; /* Abgerundete Buttons */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 1.1em;
+}
+
+.config-box button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px); /* Leichter Hover-Effekt */
+}
+
+/* Spezifische Regel für die "Errechnete Konfiguration"-Box */
+.config-box.recommended-configuration {
+    width: 100%; /* Nimmt die volle Breite ein */
+    max-width: 900px; /* Begrenzung der maximalen Breite */
+    padding: 30px; /* Größerer Abstand innerhalb der Box */
+    background: none; /* Kein Hintergrund */
+    box-shadow: none; /* Kein Schatten */
+    margin: 20px auto; /* Zentriert die Box */
+    color: #fff; /* Textfarbe beibehalten */
+}
+
+
+/* Radio-Elemente links oben fixieren */
+.radio-input-container {
+    position: fixed; /* Fixiert das Element an einer bestimmten Position */
+    top: -330px; /* Abstand vom oberen Rand */
+    left: -660px; /* Abstand vom linken Rand */
+    z-index: 10; /* Hält das Element über anderen Inhalten */
+    display: flex;
+    flex-direction: column; /* Vertikale Ausrichtung der Radio-Buttons */
+    background: rgba(0, 0, 0, 0.5); /* Halbtransparenter Hintergrund für bessere Lesbarkeit */
+    padding: 15px; /* Mehr Padding für bessere Lesbarkeit */
+    border-radius: 8px; /* Abgerundete Ecken */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Schatten für mehr Sichtbarkeit */
+    max-width: 250px; /* Optionale Begrenzung der Breite */
+    align-items: flex-start; /* Ausrichtung nach links */
+    gap: 15px; /* Abstand zwischen Radio-Buttons */
+}
+
+.radio-input {
+    display: flex;
+    flex-direction: column; /* Vertikale Anordnung */
+    gap: 10px; /* Abstand zwischen den Radio-Buttons */
+}
+
+.radio-input .label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0px 20px;
+    cursor: pointer;
+    height: 50px;
+    position: relative;
+}
+
+.radio-input label::before {
+    position: absolute;
+    content: "";
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 45px;
+    z-index: -1;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+.radio-input .label:has(input:checked)::before {
+    background-color: #2d3750;
+    border-color: #435dd8;
+    height: 50px;
+}
+
+.radio-input .label .text {
+    color: #fff;
+}
+
+.radio-input .label input[type="radio"] {
+    background-color: #202030;
+    appearance: none;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+}
+
+.radio-input .label input[type="radio"]:checked {
+    background-color: #435dd8;
+    animation: pulse 0.7s forwards;
+}
+
   </style>
 </head>
 <body>
 
 <div class="main-container">
-  <h1>Schrankberechnung</h1>
-  <div class="navigation-buttons">
-    <a href="resultsTabelle.html">Zur Tabelle</a>
-    <a href="konfiguratorNew.html">Zum Konfigurator</a>
-  </div>
+  <h1>SmartSatellit Konfigurator</h1>
+
+
+
   <div class="config-container">
     <div class="config-box">
-      <h2>Manuelle Eingabe</h2>
-      <label for="mitarbeiter">Mitarbeiter:</label>
-      <input type="number" id="mitarbeiter" placeholder="z.B. 10">
-
-      <button onclick="calculateManual()">Berechnen</button>
-      <div class="result" id="manualResult"></div>
-    </div>
-
-    <div class="config-box">
-      <h2>Daten übernehmen</h2>
-      <button onclick="loadData()">Daten aus Tabelle laden</button>
-      <div class="result" id="loadedData"></div>
-    </div>
-
-    <div class="config-box">
-      <h2>Empfohlene Anzahl an Schränken</h2>
-      <div class="result">
-        <strong>Manuelle Daten:</strong>
-        <span id="recommendedManual"></span><br>
-        <strong>Übertragene Daten:</strong>
-        <span id="recommendedTransferred"></span>
+      <h2>Daten übernehmen und berechnen</h2>
+      <button onclick="calculateAll()">Daten aus Tabelle laden und Module berechnen</button>
+      <div class="config-box recommended-configuration">
+        <h2>Errechnete Konfiguration</h2>
+        <div class="result">
+          <strong>Ausgewählte Basis:</strong> <span id="configurationBase"></span><br>
+          <strong>Ausgabe (WA 400)</strong> <span id="recommendedModules"></span><br>
+          <strong></strong> <span id="systemsOverview"></span><br>
+          <strong>Rückgabe (WR 1055 / 1270):</strong> <span id="containerReturn"></span><br>
+          <strong>Rückgabe (WR 600):</strong> <span id="rowReturn"></span>
+        </div>
       </div>
-    </div>
+
+
+      <div class="radio-input-container">
+  <div class="radio-input">
+    <label class="label">
+      <input
+              type="radio"
+              name="navigation-radio"
+              value="index.html"
+              onclick="navigateTo('index.html')"
+      />
+      <p class="text">Zurück zur Startseite</p>
+    </label>
+    <label class="label">
+      <input
+              type="radio"
+              name="navigation-radio"
+              value="konfigurator.html"
+              onclick="navigateTo('konfigurator.html')"
+      />
+      <p class="text">Zum Konfigurator</p>
+    </label>
+    <label class="label">
+      <input
+              type="radio"
+              name="navigation-radio"
+              value="resultsTabelle.html"
+              onclick="navigateTo('resultsTabelle.html')"
+      />
+      <p class="text">Tabellenansicht</p>
+    </label>
+    <label class="label">
+      <input
+              type="radio"
+              name="navigation-radio"
+              value="systemkonfigurator.html"
+              onclick="navigateTo('systemkonfigurator.html')"
+      />
+      <p class="text">Systemkonfigurator</p>
+    </label>
   </div>
 </div>
 
+
+
 <script>
-  const FÜLLMENGE_SCHRANK = 80; // Füllmenge festgelegt
-  const TAUSCHQUOTE = 2; // Tauschquote festgelegt
+  function calculateAll() {
+    const data = JSON.parse(localStorage.getItem('artikelItems')) || [];
+    if (data.length === 0) {
+        document.getElementById('configurationBase').innerText = 'Keine Daten verfügbar.';
+        document.getElementById('recommendedModules').innerText = 'Keine Daten verfügbar.';
+        document.getElementById('systemsOverview').innerText = 'Keine Systeme erforderlich.';
+        document.getElementById('containerReturn').innerText = '-';
+        document.getElementById('rowReturn').innerText = '-';
+        return;
+    }
 
-  function calculateManual() {
-    // Hole den Wert aus dem Eingabefeld
-    const mitarbeiter = parseFloat(document.getElementById('mitarbeiter').value) || 0;
+    // Konstanten
+    const TAUSCHQUOTE = 2; // Anzahl der Kleidungsstücke pro Mitarbeiter
+    const FÜLLMENGE_SCHRANK = 80; // Module füllen bis 80
+    const MODULE_CAPACITY = 8; // 8 Varianten pro Modul
+    const CONTAINER_CAPACITY = 250; // WR 1055 / 1270 Kapazität
+    const ROW_MULTIPLIER = 3; // Multiplikator für WR 600
 
-    // Berechnung der Tauschmenge und Schränke
-    const tauschmengeMitarbeiter = mitarbeiter * TAUSCHQUOTE;
-    const anzahlSchränke = Math.ceil((tauschmengeMitarbeiter * 0.5) / FÜLLMENGE_SCHRANK);
+    // Berechnung der Gesamtzahl der Mitarbeiter und Varianten
+    const totalEmployees = data.reduce((sum, item) => sum + (parseInt(item.vollzeitMitarbeiter) || 0), 0);
+    const totalVariants = data.reduce((sum, item) => sum + ((parseInt(item.artikellaengen) || 0) * (parseInt(item.artikelgroessen) || 0)), 0);
+
+    // Berechnung der Module
+    const modulesByTauschmenge = Math.ceil((totalEmployees * TAUSCHQUOTE * 0.5) / FÜLLMENGE_SCHRANK);
+    const modulesByVariants = Math.ceil(totalVariants / MODULE_CAPACITY);
+
+    // Entscheidung: Varianten oder Tauschmenge?
+    let configurationBase;
+    let selectedModules;
+    if (modulesByVariants > modulesByTauschmenge) {
+        configurationBase = 'Varianten';
+        selectedModules = modulesByVariants;
+    } else {
+        configurationBase = 'Tauschmenge';
+        selectedModules = modulesByTauschmenge;
+    }
+
+    // Aufteilung der Module auf Systeme
+    const systems = calculateSystemsBalanced(selectedModules);
+
+    // Berechnung der Rückgabeeinheiten
+    const totalTauschmenge = totalEmployees * TAUSCHQUOTE;
+    const containerReturn = Math.ceil(totalTauschmenge / CONTAINER_CAPACITY / 5); // Container Rückgabe (WR 1055 / 1270)
+    const rowReturn = containerReturn * ROW_MULTIPLIER; // Anreiher Rückgabe (WR 600)
 
     // Ergebnisse anzeigen
-    document.getElementById('manualResult').innerText = `Tauschmenge: ${tauschmengeMitarbeiter}`;
-    document.getElementById('recommendedManual').innerText = `${anzahlSchränke} Schränke`;
+    document.getElementById('configurationBase').innerText = configurationBase;
+    document.getElementById('recommendedModules').innerText = `${selectedModules}`;
+    document.getElementById('systemsOverview').innerText = `
+        ${systems.length} Systeme: ${systems.map((m, i) => `System ${i + 1}: ${m} Module`).join(', ')}
+    `;
+    document.getElementById('containerReturn').innerText = `${containerReturn}`;
+    document.getElementById('rowReturn').innerText = `${rowReturn}`;
+}
 
 
-  }
+// Gleichmäßige Aufteilung der Module auf Systeme
+function calculateSystemsBalanced(modules) {
+    const MAX_MODULES_PER_SYSTEM = 12; // Maximal 12 Module pro System
+    const systems = [];
 
-  function loadData() {
-      const data = JSON.parse(localStorage.getItem('artikelItems')) || [];
-      if (data.length === 0) {
-          document.getElementById('loadedData').innerText = 'Keine Daten verfügbar.';
-          document.getElementById('recommendedTransferred').innerText = 'Keine Daten verfügbar.';
-          return;
-      }
+    if (modules <= MAX_MODULES_PER_SYSTEM) {
+        // Wenn die Module in ein System passen
+        systems.push(modules);
+    } else {
+        // Gleichmäßige Aufteilung auf zwei Systeme
+        const halfModules = Math.floor(modules / 2);
+        systems.push(halfModules);
 
-      // Gesamtsumme der Mitarbeiter berechnen
-      const totalEmployees = data.reduce((sum, item) => {
-        const employees = parseInt(item.vollzeitMitarbeiter) || 0;
-        console.log(`Artikel: ${item.artikelname}, Mitarbeiter: ${employees}`);
-        return sum + employees;
-    }, 0);
-    console.log("Gesamtsumme der Mitarbeiter:", totalEmployees);
+        // Restliche Module
+        const remainingModules = modules - halfModules;
+        systems.push(remainingModules);
+    }
 
-
+    return systems;
+}
 
 
-  }
+// Gleichmäßige Aufteilung der Module auf Systeme
+function calculateSystemsBalanced(modules) {
+    const MAX_MODULES_PER_SYSTEM = 12; // Maximal 12 Module pro System
+    const systems = [];
+
+    if (modules <= MAX_MODULES_PER_SYSTEM) {
+        // Wenn die Module in ein System passen
+        systems.push(modules);
+    } else {
+        // Gleichmäßige Aufteilung auf zwei Systeme
+        const halfModules = Math.floor(modules / 2);
+        systems.push(halfModules);
+
+        // Restliche Module
+        const remainingModules = modules - halfModules;
+        systems.push(remainingModules);
+    }
+
+    return systems;
+}
+
+
+
+
+ function calculateSystemsBalanced(modules) {
+     const MAX_MODULES_PER_SYSTEM = 12; // Maximal 12 Module pro System
+     const systems = [];
+
+     if (modules <= MAX_MODULES_PER_SYSTEM) {
+         // Wenn die Module in ein System passen
+         systems.push(modules);
+     } else {
+         // Gleichmäßige Aufteilung auf zwei Systeme
+         const halfModules = Math.floor(modules / 2);
+         systems.push(halfModules);
+
+         // Restliche Module
+         const remainingModules = modules - halfModules;
+         systems.push(remainingModules);
+     }
+
+     return systems;
+ }
+
+
+ document.addEventListener('DOMContentLoaded', () => {
+     const currentPage = window.location.pathname.split('/').pop();
+     const navigationRadios = document.querySelectorAll('.radio-input input[name="navigation-radio"]');
+     navigationRadios.forEach(radio => {
+       if (radio.value === currentPage) {
+         radio.checked = true;
+       }
+     });
+   });
+
+   function navigateTo(page) {
+     window.location.href = page;
+   }
+
+
+
 </script>
 
 </body>

@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konfigurator</title>
+    <title>Konfigurator BackUp</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -16,15 +17,63 @@
             min-height: 100vh;
             color: #fff;
             padding: 20px;
+            position: relative;
         }
+        /* Overlay, um den Hintergrund abzudunkeln, wenn eine Box geöffnet ist */
+        .background-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Abdunkelung des Hintergrunds */
+            z-index: 2; /* Über alles außer die modale Box */
+        }
+
+        /* Abdunklung des Hintergrundbildes */
+        .background-darken {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Passt die Transparenz an, um das Bild zu verdunkeln */
+            z-index: 1; /* Bleibt hinter allen anderen Elementen */
+            pointer-events: none; /* Verhindert Interaktion mit der Overlay-Schicht */
+        }
+
+
+        /* Transparenten Hintergrund um die Boxen mit Rand auf dem Bildschirm */
+        /* Hintergrund um die Boxen mit Abstand zum Rand */
+        .background-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            margin: 20px auto; /* Zentriert das Element horizontal */
+            border-radius: 20px;
+            width: calc(100% - 80px);
+            max-width: 1200px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Zentriert den Inhalt horizontal */
+            justify-content: center; /* Zentriert den Inhalt vertikal */
+            min-height: 80vh; /* Mindestgröße für vertikale Zentrierung */
+        }
+
+
+
         .main-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
+            z-index: 1; /* Vordergrund */
+            position: relative;
         }
         .language-selector {
             position: absolute;
@@ -32,6 +81,7 @@
             right: 20px;
             display: flex;
             align-items: center;
+            z-index: 1;
         }
         .language-selector select {
             padding: 5px;
@@ -41,101 +91,10 @@
             color: #fff;
             margin-left: 10px;
         }
-        .config-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-        }
-        .config-box {
-            position: relative;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            margin: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            width: calc(33% - 40px);
-            box-sizing: border-box;
-            transition: box-shadow 0.3s, background 0.3s;
-        }
-        .config-box:hover {
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .config-box h2 {
-            margin-top: 0;
-        }
-        .config-box label {
-            display: block;
-            margin: 15px 0 5px;
-            font-size: 1.1em;
-        }
-        .config-box input {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.4);
-            color: #000;
-            font-size: 1em;
-        }
-        .config-box button {
-            width: 100%;
-            padding: 15px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 1.1em;
-        }
-        .config-box button:hover {
-            background-color: #0056b3;
-        }
-        .add-box, .remove-box {
-            cursor: pointer;
-            font-size: 1.5em;
-            position: absolute;
-            top: 10px;
-            color: #fff;
-        }
-        .add-box {
-            right: 40px;
-        }
-        .remove-box {
-            right: 10px;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 1.3em;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .view-results {
-            position: fixed;
-            right: 20px;
-            top: 60px;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
-            transition: background-color 0.3s;
-        }
-        .view-results:hover {
-            background-color: #218838;
-        }
         .backButton {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+            position: fixed; /* Button jetzt fixiert in der oberen linken Ecke */
+            top: 10px;
+            left: 10px;
             padding: 10px 20px;
             background-color: orange;
             color: white;
@@ -144,223 +103,980 @@
             cursor: pointer;
             text-decoration: none;
             transition: background-color 0.3s ease;
+            z-index: 2; /* Vordergrund, über dem transparenten Hintergrund */
         }
-
         .backButton:hover {
             background-color: #cc7000;
         }
         select, button, input {
             outline: none;
         }
-        @media (max-width: 768px) {
-            .config-box {
-                width: calc(50% - 40px);
-            }
+
+        /* Inventar-Container */
+        .inventory-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 20px;
         }
-        @media (max-width: 480px) {
-            .config-box {
-                width: calc(100% - 40px);
-            }
+
+        .inventory-item {
+            width: 150px;
+            height: 150px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.3); /* Transparenter Hintergrund */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            color: #fff; /* Weiße Schrift */
+            text-align: center;
         }
+
+        /* Hover-Effekt mit leichtem Glow */
+        .inventory-item:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Glow-Effekt */
+        }
+
+        .inventory-item .item-label {
+            font-size: 1.2em;
+        }
+
+        /* Modale Box */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 3;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            padding: 20px 30px; /* Vertikales und horizontales Padding */
+            background-color: rgba(255, 255, 255, 0.3); /* Transparenter Hintergrund für die modale Box */
+            color: #fff; /* Weiße Schrift */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .modal label {
+            display: block;
+            margin-bottom: 5px;
+            color: #fff; /* Weiße Schrift */
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: rgba(255, 255, 255, 0.1); /* Transparenter Input-Hintergrund */
+            color: #fff; /* Weiße Schrift */
+        }
+
+        .modal button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+.saveButton {
+  padding: 0.7em 1.5em; /* Weniger Padding */
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  letter-spacing: 3px; /* Weniger Abstand zwischen Buchstaben */
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #32cd32;
+  transition: all 500ms; /* Kürzere Übergangszeit */
+  font-size: 13px; /* Kleinere Schriftgröße */
+  position: relative;
+  overflow: hidden;
+  outline: 2px solid #32cd32;
+}
+
+.saveButton:hover {
+  color: #ffffff;
+  transform: scale(1.05); /* Weniger Vergrößerung beim Hover */
+  outline: 2px solid #ffffff;
+  box-shadow: 3px 4px 14px -3px #32cd32; /* Weniger intensiver Schatten */
+}
+
+.saveButton::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: #32cd32;
+  transform: skewX(45deg);
+  z-index: -1;
+  transition: width 500ms; /* Kürzere Übergangszeit */
+}
+
+.saveButton:hover::before {
+  width: 250%;
+}
+
+.closeButton {
+  padding: 0.7em 1.5em; /* Weniger Padding */
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  letter-spacing: 3px; /* Weniger Abstand zwischen Buchstaben */
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #e43b3a;
+  transition: all 500ms; /* Kürzere Übergangszeit */
+  font-size: 13px; /* Kleinere Schriftgröße */
+  position: relative;
+  overflow: hidden;
+  outline: 2px solid #e43b3a;
+}
+
+.closeButton:hover {
+  color: #ffffff;
+  transform: scale(1.05); /* Weniger Vergrößerung beim Hover */
+  outline: 2px solid #ffffff;
+  box-shadow: 3px 4px 14px -3px #e43b3a; /* Weniger intensiver Schatten */
+}
+
+.closeButton::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: #e43b3a;
+  transform: skewX(45deg);
+  z-index: -1;
+  transition: width 500ms; /* Kürzere Übergangszeit */
+}
+
+.closeButton:hover::before {
+  width: 250%;
+}
+
+
+
+        /* Zeilenweise Anordnung */
+        .modal .row {
+            display: flex;
+            gap: 20px; /* Abstand zwischen den Eingabefeldern */
+        }
+
+        .modal .row div {
+            flex: 1; /* Sorgt dafür, dass die beiden Felder gleichmäßig verteilt sind */
+        }
+
+
+        .modal .row label {
+            width: 48%;
+        }
+
+        .modal .row input {
+            width: 48%;
+        }
+
+.tableButton {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background-color: #4CAF50; /* Grün passend zu den anderen Elementen */
+    color: white;
+    border: none;
+    border-radius: 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+}
+
+.tableButton:hover {
+    background-color: #45a049; /* Dunklerer Grünton beim Hover */
+}
+
+/* Basis-Stil für den Button */
+.Btn {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* SVG mittig ausrichten */
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: 0.3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background: rgb(255, 135, 65);
+  background: linear-gradient(
+    250deg,
+    rgba(255, 135, 65, 1) 15%,
+    rgba(255, 65, 65, 1) 65%
+  );
+}
+
+/* Symbol-Stil */
+.sign {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+
+/* Standard-Symbol */
+.sign svg {
+  width: 18px;
+  transition: transform 0.3s ease;
+}
+
+.sign svg path {
+  fill: white;
+}
+
+/* Text-Stil */
+.textBtn {
+  position: relative;
+  width: 0;
+  opacity: 0;
+  color: white;
+  font-size: 1em;
+  font-weight: 600;
+  margin-left: 0;
+  transition: opacity 0.3s ease, width 0.3s ease, margin-left 0.3s ease;
+}
+
+/* Hover-Effekt für den Button */
+.Btn:hover {
+  width: 140px; /* Platz schaffen für den Text */
+  border-radius: 40px;
+  justify-content: flex-start; /* Symbol nach links ausrichten */
+  transition-duration: 0.3s;
+}
+
+/* Symbol-Ausrichtung beim Hover */
+.Btn:hover .sign {
+  width: 30px;
+  justify-content: center; /* Symbol bleibt links ausgerichtet */
+  transition-duration: 0.3s;
+}
+
+/* Text einblenden beim Hover */
+.Btn:hover .text {
+  opacity: 1;
+  width: auto;
+  margin-left: 10px; /* Platz zwischen Symbol und Text */
+  transition-duration: 0.3s;
+}
+
+
+/* button click effect*/
+.Btn:active {
+  transform: translate(2px, 2px);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between; /* Buttons verteilen */
+  align-items: center; /* Vertikal zentrieren */
+  margin-top: 20px; /* Abstand nach oben */
+  gap: 10px; /* Abstand zwischen den Buttons */
+}
+
+.modal-buttons .Btn {
+  margin-left: auto; /* Löschen-Button ganz rechts */
+}
+
+/* Basis-Stil für die Checkbox-Komponente */
+.container {
+  display: inline-block;
+  position: relative;
+  margin-right: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  user-select: none;
+}
+
+/* Verstecke die Standard-Checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Custom Checkbox */
+.checkmark {
+  display: inline-block;
+  height: 1.3em;
+  width: 1.3em;
+  background: #606062;
+  border-radius: 5px;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3), 0px 1px 1px rgba(0, 0, 0, 0.5);
+  margin-right: 10px;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+/* Checkmark bei ausgewähltem Zustand */
+.container input:checked ~ .checkmark {
+  background-image: linear-gradient(#b9e9b3, #a8e4a0);
+}
+
+/* Indikator anzeigen, wenn ausgewählt */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 0.5em;
+  height: 0.8em;
+  border: solid white;
+  border-width: 0 0.15em 0.15em 0;
+}
+
+/* Indikator sichtbar machen */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.confirmation-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 4;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmation-content {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 20px 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 400px;
+}
+
+.confirmation-content h3 {
+    margin-bottom: 10px;
+}
+
+.confirmation-content p {
+    margin-bottom: 20px;
+}
+
+.confirmation-content .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.clearStorageButton {
+    display: block;
+    margin-top: 20px;
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #e43b3a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.clearStorageButton:hover {
+    background-color: #cc3333; /* Dunklerer Rotton beim Hover */
+}
+
+
+ .radio-input-container {
+  position: fixed; /* Fixiert in der Ecke */
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+
+.radio-input {
+  display: flex;
+  flex-direction: column; /* Vertikale Anordnung */
+  gap: 10px; /* Abstand zwischen den Radio-Buttons */
+}
+
+.radio-input .label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0px 20px;
+  cursor: pointer;
+  height: 50px;
+  position: relative;
+}
+
+.radio-input label::before {
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 45px;
+  z-index: -1;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.radio-input .label:has(input:checked)::before {
+  background-color: #2d3750;
+  border-color: #435dd8;
+  height: 50px;
+}
+
+.radio-input .label .text {
+  color: #fff;
+}
+
+.radio-input .label input[type="radio"] {
+  background-color: #202030;
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+}
+
+.radio-input .label input[type="radio"]:checked {
+  background-color: #435dd8;
+  animation: pulse 0.7s forwards;
+}
+
+.radio-input .label .text {
+    opacity: 1; /* Standardmäßig sichtbar */
+    width: auto;
+    margin-left: 10px; /* Abstand zwischen Radio-Button und Text */
+    transition: none; /* Keine Übergänge für Debugging */
+}
+
+
+
+
     </style>
 </head>
 <body>
 
-<!-- Zurück zur Startseite Button -->
-<a href="index.html" class="backButton" id="backButton">Zurück zur Startseite</a>
 
-<div class="language-selector">
-    <img id="language-flag" src="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png" alt="Language Flag" style="width:30px; vertical-align: middle; margin-right: 5px;">
-    <select id="language-select" onchange="changeLanguage()">
-        <option value="de" data-image="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png">Deutsch</option>
-        <option value="en" data-image="https://www.countryflags.com/wp-content/uploads/united-kingdom-flag-png-large.png">English</option>
-    </select>
-</div>
-
-<button class="view-results" onclick="viewResults()" data-translate-key="ergebnisseAnzeigen">Ergebnisse anzeigen</button>
-<div class="main-container">
-    <div class="config-container" id="config-container">
-        <!-- Die Konfigurationsboxen werden hier durch das Skript eingefügt -->
+<div class="background-darken"></div>
+<!-- Restlicher Inhalt -->
+<div class="confirmation-modal" id="confirmation-modal">
+    <div class="confirmation-content">
+        <h3>Möchten Sie wirklich alle Daten löschen?</h3>
+        <p>Dies kann nicht rückgängig gemacht werden.</p>
+        <div class="modal-buttons">
+            <button class="saveButton" onclick="confirmClearStorage()">Ja, alles löschen</button>
+            <button class="closeButton" onclick="closeConfirmationModal()">Abbrechen</button>
+        </div>
     </div>
 </div>
 
-<script>
-    let boxCounter = 1;
+<!-- Abdunklung des Hintergrunds, wenn eine Box geöffnet ist -->
+<div class="background-overlay" id="background-overlay"></div>
 
-    let currentLanguage = 'de'; // Standardmäßig Deutsch
 
-    function createBox(config = {}) {
-        boxCounter++;
-        const container = document.getElementById('config-container');
-        const newBox = document.createElement('div');
-        newBox.className = 'config-box';
-        newBox.id = `box-${boxCounter}`;
-        newBox.innerHTML = `
-            <span class="add-box" onclick="addBox()">&#43;</span>
-            <span class="remove-box" onclick="removeBox(this)">&#8722;</span>
-            <h2 data-translate-key="artikel">${translations[currentLanguage].artikel}</h2>
-            <label for="artikelname-${boxCounter}" data-translate-key="artikelname">${translations[currentLanguage].artikelname}</label>
-            <input type="text" id="artikelname-${boxCounter}" name="artikelname" value="${config.artikelname || ''}">
 
-            <label for="artikellaengen-${boxCounter}" data-translate-key="artikellaengen">${translations[currentLanguage].artikellaengen}</label>
-            <input type="text" id="artikellaengen-${boxCounter}" name="artikellaengen" value="${config.artikellaengen || ''}">
 
-            <label for="artikelgroessen-${boxCounter}" data-translate-key="artikelgroessen">${translations[currentLanguage].artikelgroessen}</label>
-            <input type="text" id="artikelgroessen-${boxCounter}" name="artikelgroessen" value="${config.artikelgroessen || ''}">
+<div class="language-selector">
+    <img id="language-flag" src="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png" alt="Language Flag" style="width:30px; vertical-align: middle; margin-right: 5px;">
+    <label for="language-select"></label><select id="language-select" onchange="changeLanguage()">
+    <option value="de" data-image="https://www.countryflags.com/wp-content/uploads/germany-flag-png-large.png">Deutsch</option>
+    <option value="en" data-image="https://www.countryflags.com/wp-content/uploads/united-kingdom-flag-png-large.png">English</option>
+</select>
+</div>
 
-            <label for="vollzeitMitarbeiter-${boxCounter}" data-translate-key="vollzeitMitarbeiter">${translations[currentLanguage].vollzeitMitarbeiter}</label>
-            <input type="number" id="vollzeitMitarbeiter-${boxCounter}" name="vollzeitMitarbeiter" value="${config.vollzeitMitarbeiter || ''}">
+<!-- Hintergrund um die Boxen mit Abstand zum Rand -->
+<div class="background-container">
+    <!-- Inventar-Container -->
+    <div class="inventory-container" id="inventory-container">
+        <div class="inventory-item" onclick="openModal('new')">
+            <span class="plus-icon">+</span>
+        </div>
+    </div>
+</div>
+<div class="radio-input-container">
+    <div class="radio-input">
+        <label class="label">
+            <input
+                    type="radio"
+                    name="navigation-radio"
+                    value="index.html"
+                    onclick="navigateTo('index.html')"
+            />
+            <p class="text">Zurück zur Startseite</p>
+        </label>
+        <label class="label">
+            <input
+                    type="radio"
+                    name="navigation-radio"
+                    value="konfigurator-working-version.html"
+                    onclick="navigateTo('konfigurator-working-version.html')"
+            />
+            <p class="text">Zum Konfigurator</p>
+        </label>
+        <label class="label">
+            <input
+                    type="radio"
+                    name="navigation-radio"
+                    value="resultsTabelle.html"
+                    onclick="navigateTo('resultsTabelle.html')"
+            />
+            <p class="text">Tabellenansicht</p>
+        </label>
+        <label class="label">
+            <input
+                    type="radio"
+                    name="navigation-radio"
+                    value="systemkonfigurator.html"
+                    onclick="navigateTo('systemkonfigurator.html')"
+            />
+            <p class="text ">Systemkonfigurator</p>
+        </label>
+    </div>
+    <div class="radio-input-container">
+        <div class="radio-input">
+            <label class="label">
+                <input
+                        type="radio"
+                        name="navigation-radio"
+                        value="index.html"
+                        onclick="navigateTo('index.html')"
+                />
+                <p class="text">Zurück zur Startseite</p>
+            </label>
+            <label class="label">
+                <input
+                        type="radio"
+                        name="navigation-radio"
+                        value="konfigurator-working-version.html"
+                        onclick="navigateTo('konfigurator-working-version.html')"
+                />
+                <p class="text">Zum Konfigurator</p>
+            </label>
+            <label class="label">
+                <input
+                        type="radio"
+                        name="navigation-radio"
+                        value="resultsTabelle.html"
+                        onclick="navigateTo('resultsTabelle.html')"
+                />
+                <p class="text">Tabellenansicht</p>
+            </label>
+            <label class="label">
+                <input
+                        type="radio"
+                        name="navigation-radio"
+                        value="systemkonfigurator.html"
+                        onclick="navigateTo('systemkonfigurator.html')"
+                />
+                <p class="text">Systemkonfigurator</p>
+            </label>
+        </div>
+        <!-- Hinzugefügter Button -->
+        <button class="clearStorageButton" onclick="clearStorage()">Von vorne anfangen</button>
+    </div>
 
-            <label for="teilzeitMitarbeiter-${boxCounter}" data-translate-key="teilzeitMitarbeiter">${translations[currentLanguage].teilzeitMitarbeiter}</label>
-            <input type="number" id="teilzeitMitarbeiter-${boxCounter}" name="teilzeitMitarbeiter" value="${config.teilzeitMitarbeiter || ''}">
+</div>
 
-            <label for="tauschquote-${boxCounter}" data-translate-key="tauschquote">${translations[currentLanguage].tauschquote}</label>
-            <input type="number" step="0.01" id="tauschquote-${boxCounter}" name="tauschquote" value="${config.tauschquote || ''}">
+<!-- Modal für Artikel hinzufügen -->
+<div class="modal" id="modal">
+    <h2>Artikel hinzufügen</h2>
+    <label for="artikelname">Artikelname</label>
+    <input type="text" id="artikelname">
+    <div class="row">
+        <div>
+            <label for="artikellaengen">Artikel Längen</label>
+            <input type="text" id="artikellaengen">
+        </div>
 
-            <label for="lieferrhythmus-${boxCounter}" data-translate-key="lieferrhythmus">${translations[currentLanguage].lieferrhythmus}</label>
-            <input type="text" id="lieferrhythmus-${boxCounter}" name="lieferrhythmus" value="${config.lieferrhythmus || '3'}">
+        <div>
+            <label for="artikelgroessen">Artikel Größen</label>
+            <input type="text" id="artikelgroessen">
+        </div>
+    </div>
 
-            <button type="button" onclick="calculate('box-${boxCounter}')" data-translate-key="berechnen">${translations[currentLanguage].berechnen}</button>
-            <div class="result" id="result-${boxCounter}"></div>
-        `;
-        container.appendChild(newBox);
-        updateRemoveButtons();
-    }
+    <label for="vollzeitMitarbeiter">Mitarbeiter</label>
+    <input type="number" id="vollzeitMitarbeiter">
 
-    function addBox() {
-        createBox();
-    }
 
-    function removeBox(element) {
-        const box = element.parentElement;
-        box.remove();
-        updateRemoveButtons();
-    }
+    <label>Lieferrhythmus</label>
+    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+        <label class="container">1x pro Woche
+            <input type="radio" name="lieferrhythmus" value="1" id="lieferrhythmus-1" checked>
+            <div class="checkmark"></div>
+        </label>
+        <label class="container">3x pro Woche
+            <input type="radio" name="lieferrhythmus" value="3" id="lieferrhythmus-3">
+            <div class="checkmark"></div>
+        </label>
+        <label class="container">5x pro Woche
+            <input type="radio" name="lieferrhythmus" value="5" id="lieferrhythmus-5">
+            <div class="checkmark"></div>
+        </label>
+    </div>
 
-    function updateRemoveButtons() {
-        const removeButtons = document.querySelectorAll('.remove-box');
-        if (removeButtons.length === 1) {
-            removeButtons[0].style.display = 'none';
-        } else {
-            removeButtons.forEach(button => button.style.display = 'inline');
-        }
-    }
 
-    function viewResults() {
-        results = [];
-        const boxes = document.querySelectorAll('.config-box');
-        boxes.forEach(box => {
-            const artikelname = box.querySelector('input[name="artikelname"]').value;
-            const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
-            const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
-            const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
-            const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
-            const tauschquote = parseFloat(box.querySelector('input[name="tauschquote"]').value) || 0;
-            const lieferrhythmus = box.querySelector('input[name="lieferrhythmus"]').value;
 
-            const teilzeitMitarbeiter1Ergebnis = teilzeitMitarbeiter * 0.5;
-            const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiter1Ergebnis;
-            const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
-            const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
-            const ausstattungsmenge = teileProMitarbeiter * 3;
 
-            const result = {
-                artikelname,
-                artikellaengen,
-                artikelgroessen,
-                vollzeitMitarbeiter,
-                teilzeitMitarbeiter,
-                tauschquote,
-                lieferrhythmus,
-                teileProMitarbeiter,
-                ausstattungsmenge
-            };
+    <div class="modal-buttons">
+        <button class="saveButton" onclick="saveItem()">Fertig</button>
+        <button class="closeButton" onclick="closeModal()">Schließen</button>
+        <button class="Btn" onclick="deleteItem()">
+            <div class="sign">
+                <svg
+                        viewBox="0 0 16 16"
+                        class="bi bi-trash3-fill"
+                        fill="currentColor"
+                        height="18"
+                        width="18"
+                        xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                            d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+                    ></path>
+                </svg>
+            </div>
+            <div class="textBtn">Delete</div>
+        </button>
 
-            results.push(result);
-        });
-        sessionStorage.setItem('results', JSON.stringify(results));
-        window.location.href = 'results.html';
-    }
+    </div>
 
-    function calculate(boxId) {
-        const box = document.getElementById(boxId);
-        const artikelname = box.querySelector('input[name="artikelname"]').value;
-        const artikellaengen = box.querySelector('input[name="artikellaengen"]').value;
-        const artikelgroessen = box.querySelector('input[name="artikelgroessen"]').value;
-        const vollzeitMitarbeiter = parseFloat(box.querySelector('input[name="vollzeitMitarbeiter"]').value) || 0;
-        const teilzeitMitarbeiter = parseFloat(box.querySelector('input[name="teilzeitMitarbeiter"]').value) || 0;
-        const tauschquote = parseFloat(box.querySelector('input[name="tauschquote"]').value) || 0;
-        const lieferrhythmus = box.querySelector('input[name="lieferrhythmus"]').value;
+    <!-- Im Kopfbereich: Bestätigungslöschungsmodal-Stil -->
+    <div class="confirmation-modal" id="confirmation-modal">
+        <div class="confirmation-content">
+            <h3>Möchten Sie wirklich alle Daten löschen?</h3>
+            <p>Dies kann nicht rückgängig gemacht werden.</p>
+            <div class="modal-buttons">
+                <button class="saveButton" onclick="confirmClearStorage()">Ja, alles löschen</button>
+                <button class="closeButton" onclick="closeConfirmationModal()">Abbrechen</button>
+            </div>
+        </div>
+    </div>
 
-        const teilzeitMitarbeiter1Ergebnis = teilzeitMitarbeiter * 0.5;
-        const mitarbeiterAnzahl = vollzeitMitarbeiter + teilzeitMitarbeiter1Ergebnis;
-        const mitarbeiterAnzahlGerundet = Math.ceil(mitarbeiterAnzahl);
-        const teileProMitarbeiter = mitarbeiterAnzahlGerundet * tauschquote;
-        const ausstattungsmenge = teileProMitarbeiter * 3;
 
-        box.querySelector('.result').innerHTML = `
-            <strong>Ergebnisse:</strong><br>
-            Tauschmenge pro Woche: ${teileProMitarbeiter}<br>
-            Ausstattungsmenge: ${ausstattungsmenge}
-        `;
-    }
 
-    const translations = {
+
+
+    <script>
+        let currentLanguage = 'de'; // Standardmäßig Deutsch
+        let editingItemId = null; // Um zu wissen, ob ein neues Element erstellt oder ein vorhandenes bearbeitet wird
+
+        const translations = {
         de: {
-            artikel: "Artikel",
-            artikelname: "Artikelname",
-            artikellaengen: "Artikel Längen",
-            artikelgroessen: "Artikel Größen",
-            vollzeitMitarbeiter: "Vollzeitmitarbeiter",
-            teilzeitMitarbeiter: "Teilzeitmitarbeiter",
-            tauschquote: "Tauschquote pro Woche",
-            lieferrhythmus: "Lieferrhythmus",
-            berechnen: "Berechnen",
-            ergebnisseAnzeigen: "Ergebnisse anzeigen",
-            backButton: "Zurück zur Startseite"
+            backButton: "Zurück zur Startseite",
+            tableButton: "Tabellenansicht",
+            clearStorage: "Von vorne anfangen",
+            modalTitle: "Artikel hinzufügen",
+            saveButton: "Fertig",
+            closeButton: "Schließen",
+            confirmClear: "Ja, alles löschen",
+            cancelClear: "Abbrechen",
+            cannotUndo: "Dies kann nicht rückgängig gemacht werden.",
+            itemName: "Artikelname",
+            itemLengths: "Artikel Längen",
+            itemSizes: "Artikel Größen",
+            employees: "Mitarbeiter",
+            deliveryFrequency: "Lieferrhythmus"
         },
         en: {
-            artikel: "Article",
-            artikelname: "Article name",
-            artikellaengen: "Article lengths",
-            artikelgroessen: "Article sizes",
-            vollzeitMitarbeiter: "Full-time employee",
-            teilzeitMitarbeiter: "Part-time employee",
-            tauschquote: "Exchange rate per week",
-            lieferrhythmus: "Delivery frequency",
-            berechnen: "Calculate",
-            ergebnisseAnzeigen: "Show Results",
-            backButton: "Back to homepage"
+            backButton: "Back to homepage",
+            tableButton: "Switch to Table View",
+            clearStorage: "Start over",
+            modalTitle: "Add Item",
+            saveButton: "Save",
+            closeButton: "Close",
+            confirmClear: "Yes, clear all",
+            cancelClear: "Cancel",
+            cannotUndo: "This cannot be undone.",
+            itemName: "Item Name",
+            itemLengths: "Item Lengths",
+            itemSizes: "Item Sizes",
+            employees: "Employees",
+            deliveryFrequency: "Delivery Frequency"
         }
     };
 
-    function changeLanguage() {
+
+
+
+        function changeLanguage() {
         const select = document.getElementById('language-select');
         const selectedOption = select.options[select.selectedIndex];
         currentLanguage = selectedOption.value;
         const flagImage = selectedOption.getAttribute('data-image');
 
         document.getElementById('language-flag').src = flagImage;
-
-        const elements = document.querySelectorAll('[data-translate-key]');
-        elements.forEach(element => {
-            const key = element.getAttribute('data-translate-key');
-            element.innerText = translations[currentLanguage][key];
-        });
-
-        document.title = translations[currentLanguage].artikel;
-        document.getElementById('backButton').innerText = translations[currentLanguage].backButton;
+        updateTranslations(); // Aktualisiere die statischen Texte
+        loadItems(); // Aktualisiere die Artikelansicht
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedResults = JSON.parse(sessionStorage.getItem('results'));
-        if (savedResults && savedResults.length > 0) {
-            savedResults.forEach(config => createBox(config));
-        } else {
-            createBox();
+
+
+
+        function updateTranslations() {
+        // Navigationstexte
+        document.getElementById('backButton').innerText = translations[currentLanguage].backButton;
+        document.getElementById('resultsButton').innerText = translations[currentLanguage].tableButton;
+        document.getElementById('clearStorageButton').innerText = translations[currentLanguage].clearStorage;
+
+        // Modaltexte
+        document.querySelector('#modal h2').innerText = translations[currentLanguage].modalTitle;
+        document.querySelector('.saveButton').innerText = translations[currentLanguage].saveButton;
+        document.querySelector('.closeButton').innerText = translations[currentLanguage].closeButton;
+
+        // Confirmation Modal
+        document.querySelector('#confirmation-modal h3').innerText = translations[currentLanguage].clearStorage;
+        document.querySelector('#confirmation-modal p').innerText = translations[currentLanguage].cannotUndo;
+        document.querySelector('.saveButton').innerText = translations[currentLanguage].confirmClear;
+        document.querySelector('.closeButton').innerText = translations[currentLanguage].cancelClear;
+    }
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTranslations();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+        // Aktuelle URL abrufen
+        const currentPage = window.location.pathname.split('/').pop();
+
+        // Radio-Buttons prüfen und setzen
+        const navigationRadios = document.querySelectorAll('.radio-input input[name="navigation-radio"]');
+        navigationRadios.forEach(radio => {
+          if (radio.value === currentPage) {
+            radio.checked = true;
+          }
+        });
+      });
+
+      function navigateTo(page) {
+    window.location.href = page;
+  }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.title = 'Konfigurator New';
+        });
+
+        function openModal(itemId) {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'block';
+        editingItemId = itemId;
+
+        // Übersetzungen für die Modal-Felder
+        document.querySelector('label[for="artikelname"]').innerText = translations[currentLanguage].itemName;
+        document.querySelector('label[for="artikellaengen"]').innerText = translations[currentLanguage].itemLengths;
+        document.querySelector('label[for="artikelgroessen"]').innerText = translations[currentLanguage].itemSizes;
+        document.querySelector('label[for="vollzeitMitarbeiter"]').innerText = translations[currentLanguage].employees;
+        document.querySelector('.modal h2').innerText = translations[currentLanguage].modalTitle;
+
+        // Abdunkeln des restlichen Hintergrunds
+        const overlay = document.getElementById('background-overlay');
+        overlay.style.display = 'block';
+
+        if (itemId !== 'new') {
+            const itemData = document.getElementById(itemId).dataset;
+            document.getElementById('artikelname').value = itemData.artikelname || '';
+            document.getElementById('artikellaengen').value = itemData.artikellaengen || '';
+            document.getElementById('artikelgroessen').value = itemData.artikelgroessen || '';
+            document.getElementById('vollzeitMitarbeiter').value = itemData.vollzeitMitarbeiter || '';
         }
+    }
+
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+            editingItemId = null;
+
+            // Hintergrund wieder entfernen
+            const overlay = document.getElementById('background-overlay');
+            overlay.style.display = 'none';
+        }
+
+    function saveItem() {
+        const artikelname = document.getElementById('artikelname').value.trim();
+        const artikellaengen = document.getElementById('artikellaengen').value.trim();
+        const artikelgroessen = document.getElementById('artikelgroessen').value.trim();
+        const vollzeitMitarbeiter = parseInt(document.getElementById('vollzeitMitarbeiter').value.trim()) || 0;
+
+        const lieferrhythmusInput = document.querySelector('input[name="lieferrhythmus"]:checked');
+        if (!lieferrhythmusInput) {
+            alert("Bitte wählen Sie einen Lieferrhythmus aus.");
+            return;
+        }
+        const lieferrhythmus = parseInt(lieferrhythmusInput.value);
+
+        if (!artikelname || !artikellaengen || !artikelgroessen) {
+            alert("Bitte füllen Sie alle Felder aus.");
+            return;
+        }
+
+        const tauschquote = 2; // Festgelegter Wert
+        const tauschmenge = vollzeitMitarbeiter * tauschquote;
+
+        let ausstattungsmenge = tauschmenge *
+            (lieferrhythmus === 1 ? 3 : lieferrhythmus === 3 ? 2.5 : 2);
+
+        ausstattungsmenge = Math.round(
+            ausstattungsmenge *
+            (vollzeitMitarbeiter > 50 && vollzeitMitarbeiter <= 100 ? 1.15 :
+            vollzeitMitarbeiter <= 50 ? 1.3 : 1)
+        );
+
+        const newItemId = editingItemId === 'new' ? generateUniqueId() : editingItemId;
+
+        const newItemData = {
+            id: newItemId,
+            artikelname,
+            artikellaengen,
+            artikelgroessen,
+            vollzeitMitarbeiter,
+            tauschquote,
+            lieferrhythmus,
+            ausstattungsmenge,
+            tauschmenge, // Füge dies korrekt hinzu
+        };
+
+        const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+        if (editingItemId === 'new') {
+            items.push(newItemData);
+        } else {
+            const index = items.findIndex(item => item.id === editingItemId);
+            if (index !== -1) items[index] = newItemData;
+        }
+        localStorage.setItem('artikelItems', JSON.stringify(items));
+        loadItems();
+        closeModal();
+    }
+
+
+
+
+        function deleteItem() {
+        if (editingItemId !== 'new') {
+            // Artikel aus dem DOM entfernen
+            const item = document.getElementById(editingItemId);
+            if (item) {
+                item.remove();
+            }
+
+            // Artikel aus localStorage entfernen
+            let items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+            items = items.filter(item => item.id !== editingItemId); // Entferne den Artikel basierend auf seiner ID
+            localStorage.setItem('artikelItems', JSON.stringify(items));
+
+            // Modal schließen
+            closeModal();
+
+
+        }
+    }
+
+
+
+    function generateUniqueId() {
+        return `item-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    }
+
+
+
+    function loadItems() {
+        const items = JSON.parse(localStorage.getItem('artikelItems')) || [];
+        const inventoryContainer = document.getElementById('inventory-container');
+        inventoryContainer.innerHTML = ''; // Vorherigen Inhalt leeren
+
+        // Plus-Button immer hinzufügen
+        const plusItem = document.createElement('div');
+        plusItem.className = 'inventory-item';
+        plusItem.innerHTML = `<span class="plus-icon">+</span>`;
+        plusItem.onclick = () => openModal('new');
+        inventoryContainer.appendChild(plusItem);
+
+        // Gespeicherte Artikel hinzufügen
+        items.forEach(item => {
+            const newItem = document.createElement('div');
+            newItem.className = 'inventory-item';
+            newItem.id = item.id;
+            newItem.dataset.artikelname = item.artikelname;
+            newItem.dataset.artikellaengen = item.artikellaengen;
+            newItem.dataset.artikelgroessen = item.artikelgroessen;
+            newItem.dataset.vollzeitMitarbeiter = item.vollzeitMitarbeiter;
+            newItem.dataset.lieferrhythmus = item.lieferrhythmus;
+
+            // Artikelname direkt anzeigen
+            newItem.innerHTML = `<span class="item-label">${item.artikelname}</span>`;
+            newItem.onclick = () => openModal(newItem.id);
+            inventoryContainer.appendChild(newItem);
+        });
+    }
+
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadItems();
     });
 
-</script>
+
+    function clearStorage() {
+        // Zeige das Bestätigungs-Pop-up an
+        const confirmationModal = document.getElementById('confirmation-modal');
+        confirmationModal.style.display = 'flex';
+    }
+
+    function confirmClearStorage() {
+        // Speicher löschen und Ansicht zurücksetzen
+        localStorage.removeItem('artikelItems');
+        const inventoryContainer = document.getElementById('inventory-container');
+        inventoryContainer.innerHTML = `<div class="inventory-item" onclick="openModal('new')">
+                                            <span class="plus-icon">+</span>
+                                        </div>`;
+        closeConfirmationModal(); // Schließe das Modal nach Bestätigung
+    }
+
+    function closeConfirmationModal() {
+        // Schließe das Bestätigungs-Pop-up
+        const confirmationModal = document.getElementById('confirmation-modal');
+        confirmationModal.style.display = 'none';
+    }
+
+
+
+
+    </script>
 </body>
 </html>
