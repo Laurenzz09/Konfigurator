@@ -1,0 +1,41 @@
+.table-section {
+  padding: 3rem;
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.modul-button {
+  margin: 20px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.data-table th,
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.data-table th {
+  background-color: rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
+
+.data-table tr:hover {
+  background-color: rgba(255,255,255,0.1);
+  transition: background-color 0.2s ease;
+}

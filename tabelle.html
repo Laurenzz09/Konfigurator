@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tabelle</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="stylesKonfi.css">
+  <link rel="stylesheet" href="stylesTable.css">
+</head>
+<body>
+
+  <div class="hintergrund"></div>
+
+  <header>
+    <!-- From Uiverse.io by Admin12121 -->
+    <div class="top-header">
+      <div class="logoPage">
+        <img src="media/logo.png" alt="Logo" />
+      </div>
+    
+      <div class="menu">
+        <a href="index.html" class="link">
+          <span class="link-icon"><ion-icon name="home-outline"></ion-icon></span>
+          <span class="link-title">Startseite</span>
+        </a>
+        <a href="konfigurator.html" class="link">
+          <span class="link-icon"><ion-icon name="construct-outline"></ion-icon></span>
+          <span class="link-title">Konfigurator</span>
+        </a>
+        <a href="modulBerechner.html" class="link">
+          <span class="link-icon"><ion-icon name="calculator-outline"></ion-icon></span>
+          <span class="link-title">Modulrechner</span>
+        </a>
+        <a href="tabelle.html" class="link active">
+          <span class="link-icon"><ion-icon name="document-text-outline"></ion-icon></span>
+          <span class="link-title">Tabelle</span>
+        </a>
+       <!-- <a href="dashboard.html" class="link">
+          <span class="link-icon"><ion-icon name="settings-outline"></ion-icon></span>
+          <span class="link-title">Einstellungen</span>
+        </a> -->
+      </div>
+    </div>
+
+
+    <div class="top-bar">
+        <select id="language-select" onchange="changeLanguage()">
+          <option value="de" data-image="de.png">Deutsch</option>
+          <option value="en" data-image="en.png">English</option>
+        </select>
+        <button id="clearStorageButton" onclick="confirmClear()"></button>
+      </div>
+
+
+      <main class="table-section">
+  <h1 class="title">Übersicht aller Daten</h1>
+  <div class="table-wrapper">
+    <table class="data-table" id="artikelTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Artikelname</th>
+          <th>Laengen</th>
+          <th>Groessen</th>
+          <th>Mitarbeiter</th>
+          <th>Tauschquote</th>
+          <th>Lieferrhythmus</th>
+          <th>Varianten</th>
+          <th>Ausstatungsmenge</th>
+          <th>Tauschmenge pro Woche</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- JS fügt Zeilen hier ein -->
+      </tbody>
+    </table>
+  </div>
+
+    
+
+</main>
+
+
+  <section class="table-section">
+    <h2 class="title">Modulrechner-Ergebnisse</h2>
+    <div class="table-wrapper">
+      <table class="data-table" id="modulTable">
+        <thead>
+          <tr>
+            <th>Kategorie</th>
+            <th>Ergebnis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Wird per JS befüllt -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
+    <button onclick="downloadExcel()" class="modul-button">Excel herunterladen</button>
+
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+    <script src="tabelle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+</body>
+</html>
